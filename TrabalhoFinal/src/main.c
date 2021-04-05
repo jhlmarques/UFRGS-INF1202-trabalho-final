@@ -2,9 +2,7 @@
 
 int main(int argc, char* argv[]){
 
-    while(1){
-        return;
-    }
+
 
     return 0;
 }
