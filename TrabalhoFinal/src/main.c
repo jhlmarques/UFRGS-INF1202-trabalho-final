@@ -8,5 +8,7 @@ pSave_state cur_save = NULL; //Gravação atual
 
 int main(int argc, char* argv[]){
 
+    CloseWindow();
+
     return 0;
 }
