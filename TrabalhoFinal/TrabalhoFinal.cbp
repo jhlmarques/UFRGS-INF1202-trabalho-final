@@ -39,6 +39,30 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="src/atoms/item_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/atoms/item_functions.h" />
+		<Unit filename="src/atoms/mob_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/atoms/mob_functions.h" />
+		<Unit filename="src/atoms/turf_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/atoms/turf_functions.h" />
+		<Unit filename="src/globals.h" />
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/structs/atoms.h" />
+		<Unit filename="src/structs/map.h" />
+		<Unit filename="src/structs/point.h" />
+		<Unit filename="src/structs/save_states.h" />
+		<Unit filename="src/structs/struct_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/structs/struct_functions.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
