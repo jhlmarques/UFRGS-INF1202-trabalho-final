@@ -6,4 +6,6 @@ typedef struct point{
     unsigned int y;
 }point, *pPoint;
 
+void point_move_dir(pPoint P, int dir);
+
 #endif

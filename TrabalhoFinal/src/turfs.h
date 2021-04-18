@@ -9,15 +9,18 @@ typedef struct mob *pMob;
 #define pTURF_HAS_MOB(pTurf) (pTurf->cur_mob > NO_ID)
 #define pTURF_IS_SOLID(pTurf) (pTurf->solid)
 #define pTURF_HAS_ITEM(pTurf) (pTurf->cur_item > NO_ID)
+#define pTURF_IS_OCCUPIED(pTurf) ((pTURF_HAS_MOB(pTurf)) || (pTURF_IS_SOLID(pTurf)) || (pTURF_HAS_ITEM(pTurf)))
+
 typedef struct turf{
     int solid; //Criaturas n�o podem se mover para turfs solidos
     int cur_mob; //Criatura atual (id)
     int cur_item; //Item atual (id)
     int faction; //Se n�o neutro, somente criaturas da mesma fac��o (ou neutras) podem passar
-    pPoint pos;
+    point pos;
 
 }turf, *pTurf;
 
+void turf_set_pos(pTurf T, int x, int y);
 
 pTurf get_turf(pPoint coord);
 

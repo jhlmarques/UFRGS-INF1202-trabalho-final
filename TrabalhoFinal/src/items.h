@@ -1,8 +1,11 @@
 #ifndef _items_h_
 #define _items_h_
 
-typedef struct item{
+#include "point.h"
 
+typedef struct item{
+    point pos;
+    int id;
 
 }item, *pItem;
 

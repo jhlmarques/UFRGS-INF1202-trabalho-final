@@ -1,7 +1,6 @@
 #ifndef _mobs_h_
 #define _mobs_h_
 
-#include "point.h"
 #include "mob_movement.h"
 #include "turfs.h"
 #include "defines.h"
@@ -11,7 +10,7 @@ typedef struct mob{
     int invincible; //Nao pode ter sua vida reduzida
     int dir; //Direção do movimento
     pMob_movement movement; //Se n�o for um ponteiro nulo, define o movimento
-    pPoint pos; //Posi��o atual. Se for um ponteiro nulo, n�o est� no jogo
+    point pos; //Posi��o atual.
     int icon; //Imagem atual
     int faction; //Amigo, inimigo, neutro
     int id; //Identificador �nico
@@ -31,6 +30,8 @@ int attack(pMob attacker, pMob attacked);
 
 void simple_move(pMob moved, pTurf dest);
 
-int move_to_turf(pMob moved, pTurf dest);
+int move_check_interactions(pMob moved);
+
+void set_mob_pos(pMob M, int x, int y);
 
 #endif
