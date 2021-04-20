@@ -27,7 +27,7 @@ int main(void) {
             ClearBackground(RAYWHITE);
                 DrawText("NEW GAME", 190, 200, 20, BLUE);
             EndDrawing();
-            state = 5
+            state = 5;
             // NEW GAME
         }
         if (state == 2){
@@ -35,7 +35,7 @@ int main(void) {
             ClearBackground(RAYWHITE);
                 DrawText("LOAD GAME", 190, 200, 20, BLUE);
             EndDrawing();
-            state = 5
+            state = 5;
             // LOAD GAME
         }
         if (state == 3){    //CREDITS
@@ -48,6 +48,9 @@ int main(void) {
 
     }
     CloseWindow();
+
+
+
 
     return 0;
 }

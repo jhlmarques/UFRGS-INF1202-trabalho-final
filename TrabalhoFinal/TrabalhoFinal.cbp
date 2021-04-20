@@ -52,11 +52,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/map.h" />
+		<Unit filename="src/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/menu.h" />
 		<Unit filename="src/mob_movement.h" />
 		<Unit filename="src/mobs.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/mobs.h" />
+		<Unit filename="src/point.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/point.h" />
 		<Unit filename="src/save_states.h" />
 		<Unit filename="src/turfs.c">
