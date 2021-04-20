@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "globals.h"
 #include "raylib.h"
+#include "point.h"
 
 int is_alive(pMob mob){
     if(mob->health > 0){
