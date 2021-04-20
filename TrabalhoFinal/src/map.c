@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "map.h"
@@ -62,7 +63,7 @@ void map_create_item_v(pGame_map map, int amount){
         map_free_mobs(map);
     }
     if(amount > 0){
-        map->items = (pItem) malloc(sizeof(item) * amount); 
+        map->items = (pItem) malloc(sizeof(item) * amount);
     }
 }
 
@@ -99,3 +100,4 @@ void map_create_map(pGame_map map, int bx, int by, int nm, int ni){
     map_create_turfs(map);
 
 }
+

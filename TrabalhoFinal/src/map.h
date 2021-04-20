@@ -4,6 +4,7 @@
 #include "mobs.h"
 #include "items.h"
 #include "turfs.h"
+#include "raylib.h"
 
 #define ASCII_TURF_EMPTY ','
 #define ASCII_TURF_SOLID '#'
@@ -40,6 +41,11 @@ void map_create_turfs(pGame_map map);
 
 void map_free_map(pGame_map map);
 
+
 void map_create_map(pGame_map map, int bx, int by, int nm, int ni);
 
+
+
 #endif
+
+

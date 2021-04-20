@@ -1,3 +1,4 @@
+
 #ifndef _globals_h_
 #define _globals_h_
 
@@ -9,4 +10,6 @@
 extern pGame_map cur_map; //Mapa atual
 extern pSave_state cur_save; //Gravação atual
 
+
 #endif
+
