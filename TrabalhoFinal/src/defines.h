@@ -3,6 +3,31 @@
 
 #include <stddef.h>
 
+#define SCREENHEIGHT 450
+#define SCREENWIDTH 800
+
+#define WINDOW_NAME "Trabalho Final - Jose Henrique Lima Marques e Matheus Almeida Silva"
+
+#define STATE_MENU 1
+#define STATE_PLAYING 2
+#define STATE_STARTED_PLAYING 3
+#define STATE_STOPPED_PLAYING 4
+#define STATE_ENDED -1
+
+#define MENU_STEP_BACK -1
+
+#define MAIN_MENU_MAX_SELECT 4
+
+#define MAIN_MENU 1
+#define MENU_CREDITS 2
+#define MENU_NEWGAME 3
+#define MENU_LOADGAME 4
+#define MENU_INPUT_NEWGAME 5
+#define MENU_PAUSED 6
+
+#define MAX(a, b) ((a > b) ? a : b)
+#define MIN(a, b) ((a < b) ? a : b)
+
 //Fac��es
 #define NEUTRAL 0
 #define FRIENDLY 1
