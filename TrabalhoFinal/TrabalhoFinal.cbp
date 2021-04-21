@@ -61,6 +61,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/mobs.h" />
+		<Unit filename="src/player_movement.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/player_movement.h" />
 		<Unit filename="src/point.c">
 			<Option compilerVar="CC" />
 		</Unit>
