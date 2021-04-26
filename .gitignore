@@ -1,4 +1,5 @@
 *.layout
 *.depend
+*.save
 bin/
 obj/

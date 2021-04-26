@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 
+#define SAVEFILE_NAME "saves.save"
+#define MAX_SAVES 4
+
 #define SCREENHEIGHT 450
 #define SCREENWIDTH 800
 
@@ -22,7 +25,7 @@
 #define MENU_CREDITS 2
 #define MENU_NEWGAME 3
 #define MENU_LOADGAME 4
-#define MENU_INPUT_NEWGAME 5
+#define MENU_DELETE_SAVE 5
 #define MENU_PAUSED 6
 
 #define MAX(a, b) ((a > b) ? a : b)
