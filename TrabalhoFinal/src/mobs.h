@@ -12,7 +12,7 @@ typedef struct mob{
     int dir; //Direção do movimento
     pMob_movement movement; //Se n�o for um ponteiro nulo, define o movimento
     Vector2 pos; //Posi��o atual.
-    /* int icon; //Imagem atual */
+    int icon; //Imagem atual
     int faction; //Amigo, inimigo, neutro
     int id; //Identificador �nico
     int type_id; //Identificador do tipo de criatura

@@ -21,7 +21,7 @@ int can_attack(pMob mob){
 
 int push(pMob moved, int direction){
     Vector2 dest_coord = moved->pos;
-    point_move_dir(dest_coord, direction);
+    dest_coord = point_move_dir(dest_coord, direction);
     pTurf dest = get_turf(dest_coord);
 
     if(pTURF_IS_OCCUPIED(dest)){
@@ -56,7 +56,7 @@ void simple_move(pMob moved, pTurf dest){
 
 int move_check_interactions(pMob moved){
     Vector2 dest_coord = moved->pos; //Copia posição
-    point_move_dir(dest_coord, moved->dir); //Move a coordenada baseado na direção
+    dest_coord = point_move_dir(dest_coord, moved->dir); //Move a coordenada baseado na direção
     pTurf dest = get_turf(dest_coord);
 
     if(pTURF_IS_SOLID(dest)){
