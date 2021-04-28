@@ -51,4 +51,10 @@
 #define MAP_SIGNAL_KEY_COLLECTED (1<<0)
 #define MAP_SIGNAL_PLAYER_DEFEATED (1<<1)
 
+#define NEW_GAME 1
+#define LOAD 2
+#define CREDITS 3
+#define EXIT 4
+#define PLAYING 5
+
 #endif

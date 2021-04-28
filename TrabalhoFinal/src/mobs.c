@@ -1,7 +1,8 @@
 #include "mobs.h"
-#include "point.h"
 #include "defines.h"
 #include "globals.h"
+#include "raylib.h"
+#include "point.h"
 
 int is_alive(pMob mob){
     if(mob->health > 0){
@@ -19,9 +20,9 @@ int can_attack(pMob mob){
 }
 
 int push(pMob moved, int direction){
-    point dest_coord = moved->pos;
-    point_move_dir(&dest_coord, direction);
-    pTurf dest = get_turf(&dest_coord);
+    Vector2 dest_coord = moved->pos;
+    dest_coord = point_move_dir(dest_coord, direction);
+    pTurf dest = get_turf(dest_coord);
 
     if(pTURF_IS_OCCUPIED(dest)){
         return 0;
@@ -47,16 +48,16 @@ int attack(pMob attacker, pMob attacked){
 }
 
 void simple_move(pMob moved, pTurf dest){
-    pTurf cur_turf = get_turf(&moved->pos);
+    pTurf cur_turf = get_turf(moved->pos);
     cur_turf->cur_mob = NO_ID;
     dest->cur_mob = moved->id;
     moved->pos = dest->pos;
 }
 
 int move_check_interactions(pMob moved){
-    point dest_coord = moved->pos; //Copia posição
-    point_move_dir(&dest_coord, moved->dir); //Move a coordenada baseado na direção
-    pTurf dest = get_turf(&dest_coord);
+    Vector2 dest_coord = moved->pos; //Copia posição
+    dest_coord = point_move_dir(dest_coord, moved->dir); //Move a coordenada baseado na direção
+    pTurf dest = get_turf(dest_coord);
 
     if(pTURF_IS_SOLID(dest)){
         return 0;
@@ -90,6 +91,6 @@ int move_check_interactions(pMob moved){
 void set_mob_pos(pMob M, int x, int y){
     M->pos.x = x;
     M->pos.y = y;
-    pTurf T = get_turf(&M->pos);
+    pTurf T = get_turf(M->pos);
     T->cur_mob = M->id;
 }

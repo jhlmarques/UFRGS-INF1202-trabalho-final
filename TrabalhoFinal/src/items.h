@@ -2,9 +2,10 @@
 #define _items_h_
 
 #include "point.h"
+#include "raylib.h"
 
 typedef struct item{
-    point pos;
+    Vector2 pos;
     int id;
 
 }item, *pItem;
