@@ -10,6 +10,8 @@
 
 pGame_map cur_map = NULL; //Mapa atual
 pSave_state cur_save = NULL; //Gravação atual
+save_state all_saves[MAX_SAVES]; //Todas Gravações
+int saves_loaded; //Última quantidade de gravações lidas
 
 int main(void) {
     const int screenWidth = SCREENWIDTH;
@@ -18,6 +20,7 @@ int main(void) {
     int menu_oldstate;
     menu game_menu;
     set_basic_menu(&game_menu);
+    saves_loaded = load_save_file(SAVEFILE_NAME, all_saves);
 
     InitWindow(screenWidth, screenHeight, WINDOW_NAME);
 

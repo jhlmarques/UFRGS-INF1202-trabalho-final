@@ -12,4 +12,14 @@ typedef struct save_state{
 
 }save_state, *pSave_state;
 
+int savefile_savesamnt(char* savefile_name);
+
+int load_save_file(char* savefile_name, pSave_state saves_v);
+
+int write_save_to_file(char* savefile_name, pSave_state save_to_write, int pos);
+
+void new_save_state(pSave_state save, char* p_name);
+
+void delete_save(char* savefile_name, int pos);
+
 #endif
