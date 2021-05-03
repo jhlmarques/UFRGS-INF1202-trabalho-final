@@ -1,7 +1,7 @@
 #include "point.h"
 #include "defines.h"
 
-Vector2 point_move_dir(Vector2 P, int dir){
+Vector2 PointMoveDir(Vector2 P, int dir){
     switch(dir){
         case NORTH:
             P.y -= 1.0f;

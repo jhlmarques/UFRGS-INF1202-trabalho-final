@@ -10,6 +10,6 @@ typedef struct item{
 
 }item, *pItem;
 
-void item_activated(int item_id);
+void ItemActivated(int item_id);
 
 #endif

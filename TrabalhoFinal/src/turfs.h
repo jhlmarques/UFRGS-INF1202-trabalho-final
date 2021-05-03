@@ -21,10 +21,10 @@ typedef struct turf{
 
 }turf, *pTurf;
 
-void turf_set_pos(pTurf T, float a, float b);
+void TurfSetPos(pTurf T, float a, float b);
 
-pTurf get_turf(Vector2 coord);
+pTurf GetTurf(Vector2 coord);
 
-int can_move(pMob to_move, pTurf dest);
+int CanMove(pMob to_move, pTurf dest);
 
 #endif

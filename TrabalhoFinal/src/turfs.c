@@ -1,15 +1,15 @@
 #include "globals.h"
 
-void turf_set_pos(pTurf T, float a, float b){
+void TurfSetPos(pTurf T, float a, float b){
     T->pos.x = a;
     T->pos.y = b;
 }
 
-pTurf get_turf(Vector2 coord){
+pTurf GetTurf(Vector2 coord){
     return &pMAP_ACESS_TURF(cur_map, (int)coord.x, (int)coord.y);
 }
 
-int can_move(pMob to_move, pTurf dest){
+int CanMove(pMob to_move, pTurf dest){
     if(dest->solid){
         return 0;
     }

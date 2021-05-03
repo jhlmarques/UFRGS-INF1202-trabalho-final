@@ -20,19 +20,19 @@ typedef struct mob{
 
 #define pMOB_IS_PLAYER(pMob) (pMob->id == PLAYER_ID)
 
-int is_alive(pMob mob);
+int IsAlive(pMob mob);
 
 
-int can_attack(pMob mob);
+int CanAttack(pMob mob);
 
-int push(pMob moved, int direction);
+int Push(pMob moved, int direction);
 
-int attack(pMob attacker, pMob attacked);
+int Attack(pMob Attacker, pMob Attacked);
 
-void simple_move(pMob moved, pTurf dest);
+void SimpleMove(pMob moved, pTurf dest);
 
-int move_check_interactions(pMob moved);
+int MoveCheckInteractions(pMob moved);
 
-void set_mob_pos(pMob M, int x, int y);
+void SetMobPos(pMob M, int x, int y);
 
 #endif

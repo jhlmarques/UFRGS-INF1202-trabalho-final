@@ -13,18 +13,18 @@ typedef struct menu{
     int buffer_pos;
 }menu, *pMenu;
 
-void set_basic_menu(pMenu game_menu);
+void SetBasicMenu(pMenu game_menu);
 
-void menu_input(pMenu game_menu);
+void MenuInput(pMenu game_menu);
 
-void menu_step_back(pMenu game_menu, int* game_state);
+void MenuStepBack(pMenu game_menu, int* game_state);
 
-void menu_on_select(pMenu game_menu, int* game_state);
+void MenuOnSelect(pMenu game_menu, int* game_state);
 
-void set_menu_max_select(pMenu game_menu);
+void SetMenuMaxSelect(pMenu game_menu);
 
-void menu_char_input(pMenu game_menu);
+void MenuCharInput(pMenu game_menu);
 
-void draw_menu(pMenu game_menu);
+void DrawMenu(pMenu game_menu);
 
 #endif // MENU_H_INCLUDED

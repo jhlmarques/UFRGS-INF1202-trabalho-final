@@ -7,7 +7,7 @@
 #include "save_states.h"
 
 
-void set_basic_menu(pMenu game_menu){
+void SetBasicMenu(pMenu game_menu){
     game_menu->selection = 0;
     game_menu->selected = 0;
     game_menu->state = MAIN_MENU;
@@ -16,7 +16,8 @@ void set_basic_menu(pMenu game_menu){
     game_menu->taking_char_input = 0;
 }
 
-void draw_menu(pMenu game_menu){
+void DrawMenu(pMenu game_menu){
+    DrawText(TextFormat("Selection: %d\nSelected: %d\n", game_menu->selection, game_menu->selected), 190, 100, 20, LIGHTGRAY);
     switch(game_menu->state){
 
         case MAIN_MENU:{
@@ -64,7 +65,7 @@ void draw_menu(pMenu game_menu){
 
 }
 
-void menu_input(pMenu game_menu){
+void MenuInput(pMenu game_menu){
     game_menu->selected = 0;
     if(IsKeyPressed(KEY_ENTER)){
         game_menu->selected = game_menu->selection;
@@ -83,7 +84,7 @@ void menu_input(pMenu game_menu){
     }
 }
 
-void menu_step_back(pMenu game_menu, int* game_state){
+void MenuStepBack(pMenu game_menu, int* game_state){
     switch(game_menu->state){
         case MAIN_MENU:
         break;
@@ -102,7 +103,7 @@ void menu_step_back(pMenu game_menu, int* game_state){
     }
 }
 
-void menu_on_select(pMenu game_menu, int* game_state){
+void MenuOnSelect(pMenu game_menu, int* game_state){
     switch(game_menu->state){
         case MAIN_MENU:
             switch(game_menu->selected){
@@ -157,7 +158,7 @@ void menu_on_select(pMenu game_menu, int* game_state){
     }
 }
 
-void set_menu_max_select(pMenu game_menu){
+void SetMenuMaxSelect(pMenu game_menu){
     switch(game_menu->state){
         case MAIN_MENU:
         game_menu->max_selection = MAIN_MENU_MAX_SELECT;
@@ -175,8 +176,7 @@ void set_menu_max_select(pMenu game_menu){
     }
 }
 
-void menu_char_input(pMenu game_menu){
-    char key;
+void MenuCharInput(pMenu game_menu){
     if(IsKeyPressed(KEY_BACKSPACE)){
         game_menu->buffer_pos = MAX(0, game_menu->buffer_pos - 1);
         game_menu->input_buffer[game_menu->buffer_pos] = '\0';
