@@ -27,22 +27,22 @@ typedef struct game_map{
     int current_signals; //Sinais enviados por items no mapa (exemplo: chave consumida, jogador morto, etc)
 }game_map, *pGame_map;
 
-void print_map_ASCII(pGame_map map);
+void PrintMap_ASCII(pGame_map map);
 
-void map_free_mobs(pGame_map map);
+void MapFreeMobs(pGame_map map);
 
-void map_create_mob_v(pGame_map map, int amount);
+void MapCreateMobV(pGame_map map, int amount);
 
-void map_free_items(pGame_map map);
+void MapFreeItems(pGame_map map);
 
-void map_create_item_v(pGame_map map, int amount);
+void MapCreateItemV(pGame_map map, int amount);
 
-void map_create_turfs(pGame_map map);
+void MapCreateTurfs(pGame_map map);
 
-void map_free_map(pGame_map map);
+void MapFreeMap(pGame_map map);
 
 
-void map_create_map(pGame_map map, int bx, int by, int nm, int ni);
+void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni);
 
 
 

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int savefile_savesamnt(char* savefile_name){
+int Savefile_SavesAmnt(char* savefile_name){
     FILE* savefile;
     if(!(savefile = fopen(savefile_name, "rb"))){
         printf("Erro ao tentar abrir %s\n", savefile_name);
@@ -19,8 +19,8 @@ int savefile_savesamnt(char* savefile_name){
     return size;
 }
 
-int load_save_file(char* savefile_name, pSave_state saves_v){
-    int save_amnt = savefile_savesamnt(savefile_name);
+int LoadSaveFile(char* savefile_name, pSave_state saves_v){
+    int save_amnt = Savefile_SavesAmnt(savefile_name);
 
     FILE* savefile;
     if(!(savefile = fopen(savefile_name, "rb")) || (save_amnt < 0)){
@@ -36,7 +36,7 @@ int load_save_file(char* savefile_name, pSave_state saves_v){
 
 }
 
-int write_save_to_file(char* savefile_name, pSave_state save_to_write, int pos){
+int WriteSaveToFile(char* savefile_name, pSave_state save_to_write, int pos){
     int append = (saves_loaded > 0 || pos > saves_loaded);
 
     FILE* savefile;
@@ -54,7 +54,7 @@ int write_save_to_file(char* savefile_name, pSave_state save_to_write, int pos){
     return 1;
 }
 
-void new_save_state(pSave_state save, char* p_name){
+void NewSaveState(pSave_state save, char* p_name){
     strcpy(save->player_name, p_name);
     save->save_id = saves_loaded + 1;
     save->cur_level = 1;
@@ -62,7 +62,7 @@ void new_save_state(pSave_state save, char* p_name){
     save->points = 0;
 }
 
-void delete_save(char* savefile_name, int pos){
+void DeleteSave(char* savefile_name, int pos){
     FILE* savefile;
     if(!(savefile = fopen(savefile_name, "wb"))){
         return;

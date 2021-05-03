@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "point.h"
 
-int is_alive(pMob mob){
+int IsAlive(pMob mob){
     if(mob->health > 0){
         return 1;
     }
@@ -15,49 +15,49 @@ pMob get_mob(int mob_id){
     return &cur_map->mobs[mob_id];
 }
 
-int can_attack(pMob mob){
+int CanAttack(pMob mob){
     return 1;
 }
 
-int push(pMob moved, int direction){
+int Push(pMob moved, int direction){
     Vector2 dest_coord = moved->pos;
-    dest_coord = point_move_dir(dest_coord, direction);
-    pTurf dest = get_turf(dest_coord);
+    dest_coord = PointMoveDir(dest_coord, direction);
+    pTurf dest = GetTurf(dest_coord);
 
     if(pTURF_IS_OCCUPIED(dest)){
         return 0;
     }
-    simple_move(moved, dest);
+    SimpleMove(moved, dest);
     return 1;
 }
 
 //retorna 1 se o atacante venceu, 0 para outros casos
-int attack(pMob attacker, pMob attacked){
-    if(attacked->invincible){
-        if(attacker->invincible){
+int Attack(pMob Attacker, pMob Attacked){
+    if(Attacked->invincible){
+        if(Attacker->invincible){
             return 0;
         }
-        return attack(attacked, attacker);
+        return Attack(Attacked, Attacker);
     }
-    if(can_attack(attacker)){
-        attacked->health--;
+    if(CanAttack(Attacker)){
+        Attacked->health--;
         return 1;
     }
     return 0;
 
 }
 
-void simple_move(pMob moved, pTurf dest){
-    pTurf cur_turf = get_turf(moved->pos);
+void SimpleMove(pMob moved, pTurf dest){
+    pTurf cur_turf = GetTurf(moved->pos);
     cur_turf->cur_mob = NO_ID;
     dest->cur_mob = moved->id;
     moved->pos = dest->pos;
 }
 
-int move_check_interactions(pMob moved){
+int MoveCheckInteractions(pMob moved){
     Vector2 dest_coord = moved->pos; //Copia posição
-    dest_coord = point_move_dir(dest_coord, moved->dir); //Move a coordenada baseado na direção
-    pTurf dest = get_turf(dest_coord);
+    dest_coord = PointMoveDir(dest_coord, moved->dir); //Move a coordenada baseado na direção
+    pTurf dest = GetTurf(dest_coord);
 
     if(pTURF_IS_SOLID(dest)){
         return 0;
@@ -65,7 +65,7 @@ int move_check_interactions(pMob moved){
     if(pTURF_HAS_MOB(dest)){
         pMob dest_mob = get_mob(dest->cur_mob);
         if((moved->faction == dest_mob->faction) || (dest_mob->faction == NEUTRAL && moved->id == PLAYER_ID)){
-            if(!push(dest_mob, moved->dir)){
+            if(!Push(dest_mob, moved->dir)){
                 return 0;
             }
         }
@@ -73,24 +73,24 @@ int move_check_interactions(pMob moved){
             return 0;
         }
         else{
-            attack(moved, dest_mob);
-            if(is_alive(dest_mob)){
+            Attack(moved, dest_mob);
+            if(IsAlive(dest_mob)){
                 return 0;
             }
        }
     }
     if(pTURF_HAS_ITEM(dest) && pMOB_IS_PLAYER(moved)){
-        item_activated(dest->cur_item);
+        ItemActivated(dest->cur_item);
     }
 
-    simple_move(moved, dest);
+    SimpleMove(moved, dest);
     return 1;
 
 }
 
-void set_mob_pos(pMob M, int x, int y){
+void SetMobPos(pMob M, int x, int y){
     M->pos.x = x;
     M->pos.y = y;
-    pTurf T = get_turf(M->pos);
+    pTurf T = GetTurf(M->pos);
     T->cur_mob = M->id;
 }

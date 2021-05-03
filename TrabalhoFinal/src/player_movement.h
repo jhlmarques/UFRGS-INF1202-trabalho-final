@@ -2,7 +2,7 @@
 #define PLAYER_MOVEMENT_H_INCLUDED
 #include "mobs.h"
 
-void player_movement(pMob pPlayer);
+void PlayerMovement(pMob pPlayer);
 
 
 

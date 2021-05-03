@@ -19,8 +19,8 @@ int main(void) {
     int game_state = STATE_MENU;
     int menu_oldstate;
     menu game_menu;
-    set_basic_menu(&game_menu);
-    saves_loaded = load_save_file(SAVEFILE_NAME, all_saves);
+    SetBasicMenu(&game_menu);
+    saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
 
     InitWindow(screenWidth, screenHeight, WINDOW_NAME);
 
@@ -30,20 +30,20 @@ int main(void) {
     while (!WindowShouldClose()){
         if(game_state == STATE_MENU){
             menu_oldstate = game_menu.state;
-            menu_input(&game_menu);
+            MenuInput(&game_menu);
             if(game_menu.selected){
                 if(game_menu.selected == MENU_STEP_BACK){
-                    menu_step_back(&game_menu, &game_state);
+                    MenuStepBack(&game_menu, &game_state);
                 }
                 else{
-                    menu_on_select(&game_menu, &game_state);
+                    MenuOnSelect(&game_menu, &game_state);
                 }
             }
             else if(game_menu.taking_char_input){
-                menu_char_input(&game_menu);
+                MenuCharInput(&game_menu);
             }
             if(menu_oldstate != game_menu.state){
-                set_menu_max_select(&game_menu);
+                SetMenuMaxSelect(&game_menu);
             }
         }
         else if(game_state == STATE_STARTED_PLAYING){
@@ -66,7 +66,7 @@ int main(void) {
                 case STATE_PLAYING:
                 break;
                 case STATE_MENU:
-                draw_menu(&game_menu);
+                DrawMenu(&game_menu);
                 break;
             }
         EndDrawing();
