@@ -20,7 +20,7 @@ int main(void) {
     int menu_oldstate;
     menu game_menu;
     SetBasicMenu(&game_menu);
-    saves_loaded = load_save_file(SAVEFILE_NAME, all_saves);
+    saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
 
     InitWindow(screenWidth, screenHeight, WINDOW_NAME);
 
@@ -32,7 +32,7 @@ int main(void) {
             menu_oldstate = game_menu.state;
             MenuInput(&game_menu);
             if(game_menu.selected){
-                if(game_menu.selected == MenuStepBack){
+                if(game_menu.selected == MENU_STEP_BACK){
                     MenuStepBack(&game_menu, &game_state);
                 }
                 else{

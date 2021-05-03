@@ -17,7 +17,6 @@ void SetBasicMenu(pMenu game_menu){
 }
 
 void DrawMenu(pMenu game_menu){
-    DrawText(TextFormat("Selection: %d\nSelected: %d\n", game_menu->selection, game_menu->selected), 190, 100, 20, LIGHTGRAY);
     switch(game_menu->state){
 
         case MAIN_MENU:{
@@ -120,7 +119,7 @@ void MenuOnSelect(pMenu game_menu, int* game_state){
                 break;
                 case 2:
                 game_menu->state = MENU_LOADGAME;
-                saves_loaded = load_save_file(SAVEFILE_NAME, all_saves);
+                saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
                 break;
                 case 3:
                 game_menu->state = MENU_CREDITS;
@@ -132,19 +131,19 @@ void MenuOnSelect(pMenu game_menu, int* game_state){
             break;
         case MENU_NEWGAME:
             if(game_menu->buffer_pos > 0 && saves_loaded < MAX_SAVES){
-                new_save_state(all_saves + saves_loaded, game_menu->input_buffer);
-                write_save_to_file(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
+                NewSaveState(all_saves + saves_loaded, game_menu->input_buffer);
+                WriteSaveToFile(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
                 saves_loaded++;
-                menu_step_back(game_menu, game_state); //Por enquanto só volta ao menu
+                MenuStepBack(game_menu, game_state); //Por enquanto só volta ao menu
             }
             break;
         case MENU_LOADGAME:
-            menu_step_back(game_menu, game_state); //Por enquanto só volta ao menu
+            MenuStepBack(game_menu, game_state); //Por enquanto só volta ao menu
             break;
         case MENU_DELETE_SAVE:
-            delete_save(SAVEFILE_NAME, game_menu->selected);
+            DeleteSave(SAVEFILE_NAME, game_menu->selected);
             saves_loaded--;
-            menu_step_back(game_menu, game_state);
+            MenuStepBack(game_menu, game_state);
             break;
         case MENU_PAUSED:
             switch(game_menu->selected){
@@ -182,6 +181,7 @@ void MenuCharInput(pMenu game_menu){
         game_menu->input_buffer[game_menu->buffer_pos] = '\0';
     }
     else if(game_menu->buffer_pos < PLAYER_NAME_LEN - 1){
+        char key;
         if((key = GetCharPressed())){
             game_menu->input_buffer[game_menu->buffer_pos] = key;
             game_menu->buffer_pos++;
