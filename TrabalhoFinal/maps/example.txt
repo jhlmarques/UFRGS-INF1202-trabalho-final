@@ -1,0 +1,27 @@
+(A-Z): TipoDeMovimento;passos1;dir1;passos2;dir2; ... ;passosn;dirn MAX 10
+
+simbolo(a-z): Tipo
+
+LarguraDoMapa;AlturaDoMapa;NumeroDeChaves
+
+##########
+#..*....B#
+#..==....#
+#*.=..b..#
+#...@....#
+#.....c..#
+#.a......#
+#......*.#
+#...P....#
+##########
+
+Exemplo de mapa 8x8
+Legenda:
+a,b,c = Criaturas
+B = Saida
+P = Jogador
+@ = Bloco movel
+= = Agua
+* = Chave
+
+

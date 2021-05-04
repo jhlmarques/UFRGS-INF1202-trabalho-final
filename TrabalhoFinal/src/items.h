@@ -12,4 +12,6 @@ typedef struct item{
 
 void ItemActivated(int item_id);
 
+void SetItemPos(pItem I, int x, int y);
+
 #endif

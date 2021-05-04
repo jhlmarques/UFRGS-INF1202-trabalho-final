@@ -1,6 +1,8 @@
 #ifndef _mobs_h_
 #define _mobs_h_
 
+typedef struct turf *pTurf;
+
 #include "mob_movement.h"
 #include "turfs.h"
 #include "defines.h"
@@ -10,12 +12,11 @@ typedef struct mob{
     int health; //Vida; para toda criatura, vida <= 0 significa que esta n�o interage
     int invincible; //Nao pode ter sua vida reduzida
     int dir; //Direção do movimento
-    pMob_movement movement; //Se n�o for um ponteiro nulo, define o movimento
+    pMob_movement movement_pattern; //Se nulo, não segue um padrão de movimento
     Vector2 pos; //Posi��o atual.
     int icon; //Imagem atual
     int faction; //Amigo, inimigo, neutro
     int id; //Identificador �nico
-    int type_id; //Identificador do tipo de criatura
 }mob, *pMob;
 
 #define pMOB_IS_PLAYER(pMob) (pMob->id == PLAYER_ID)

@@ -134,7 +134,7 @@ void MenuOnSelect(pMenu game_menu, int* game_state){
                 NewSaveState(all_saves + saves_loaded, game_menu->input_buffer);
                 WriteSaveToFile(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
                 saves_loaded++;
-                MenuStepBack(game_menu, game_state); //Por enquanto só volta ao menu
+                *game_state = STATE_STARTED_PLAYING;
             }
             break;
         case MENU_LOADGAME:

@@ -6,7 +6,7 @@ void TurfSetPos(pTurf T, float a, float b){
 }
 
 pTurf GetTurf(Vector2 coord){
-    return &pMAP_ACESS_TURF(cur_map, (int)coord.x, (int)coord.y);
+    return &pMAP_ACESS_TURF((&cur_map), (int)coord.x, (int)coord.y);
 }
 
 int CanMove(pMob to_move, pTurf dest){

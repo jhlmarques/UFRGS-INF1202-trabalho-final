@@ -12,7 +12,7 @@ int IsAlive(pMob mob){
 }
 
 pMob get_mob(int mob_id){
-    return &cur_map->mobs[mob_id];
+    return &cur_map.mobs[mob_id];
 }
 
 int CanAttack(pMob mob){

@@ -2,16 +2,19 @@
 #include <stdlib.h>
 #include "raylib.h"
 #include "defines.h"
+#include "globals.h"
 #include "menu.h"
 #include "mobs.h"
 #include "map.h"
 #include "save_states.h"
 #include "player_movement.h"
 
-pGame_map cur_map = NULL; //Mapa atual
+game_map cur_map; //Mapa atual
 pSave_state cur_save = NULL; //Gravação atual
 save_state all_saves[MAX_SAVES]; //Todas Gravações
 int saves_loaded; //Última quantidade de gravações lidas
+pMob mob_types; //Vetor com todos tipos de criatura (DINAMICO)
+int mob_type_amount; //Tamanho do vetor acima
 
 int main(void) {
     const int screenWidth = SCREENWIDTH;
@@ -19,8 +22,10 @@ int main(void) {
     int game_state = STATE_MENU;
     int menu_oldstate;
     menu game_menu;
+
     SetBasicMenu(&game_menu);
     saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
+    LoadMobTypes(MOB_DEF_FILE);
 
     InitWindow(screenWidth, screenHeight, WINDOW_NAME);
 
@@ -47,7 +52,10 @@ int main(void) {
             }
         }
         else if(game_state == STATE_STARTED_PLAYING){
-
+            //Carrega o que é necessário para o jogo
+            puts("CARREGANDO O JOGO...");
+            LoadMap("maps/testmap.txt");
+            game_state = STATE_PLAYING;
         }
         else if(game_state == STATE_STOPPED_PLAYING){
             //Volta ao menu
@@ -57,6 +65,7 @@ int main(void) {
         }
 
         if(game_state == STATE_ENDED){
+            free(mob_types);
             break;
         }
 
@@ -64,6 +73,8 @@ int main(void) {
             ClearBackground(RAYWHITE);
             switch(game_state){
                 case STATE_PLAYING:
+                system("cls"); //Placeholder
+                PrintMap_ASCII(&cur_map);
                 break;
                 case STATE_MENU:
                 DrawMenu(&game_menu);

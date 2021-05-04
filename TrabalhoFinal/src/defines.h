@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #define SAVEFILE_NAME "saves.save"
+#define MOB_DEF_FILE "mob_definitions.txt"
 #define MAX_SAVES 4
 
 #define SCREENHEIGHT 450
@@ -46,6 +47,8 @@
 #define MAP_MAX_X 100
 #define MAP_MAX_Y 100
 
+#define MAX_MOVEMENT_COMMANDS 10
+
 #define NORTH 1
 #define EAST 2
 #define SOUTH 3
@@ -54,10 +57,6 @@
 #define MAP_SIGNAL_KEY_COLLECTED (1<<0)
 #define MAP_SIGNAL_PLAYER_DEFEATED (1<<1)
 
-#define NEW_GAME 1
-#define LOAD 2
-#define CREDITS 3
-#define EXIT 4
-#define PLAYING 5
+
 
 #endif
