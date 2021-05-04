@@ -21,5 +21,5 @@ Vector2 PointMoveDir(Vector2 P, int dir){
             break;
 
     }
-
+    return P;
 }

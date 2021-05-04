@@ -17,9 +17,9 @@ void SetBasicMenu(pMenu game_menu);
 
 void MenuInput(pMenu game_menu);
 
-void MenuStepBack(pMenu game_menu, int* game_state);
+void MenuStepBack(pMenu game_menu);
 
-void MenuOnSelect(pMenu game_menu, int* game_state);
+void MenuOnSelect(pMenu game_menu);
 
 void SetMenuMaxSelect(pMenu game_menu);
 

@@ -12,7 +12,10 @@ typedef struct mob{
     int health; //Vida; para toda criatura, vida <= 0 significa que esta n�o interage
     int invincible; //Nao pode ter sua vida reduzida
     int dir; //Direção do movimento
-    pMob_movement movement_pattern; //Se nulo, não segue um padrão de movimento
+    int movement_pattern; //Se menor que zero, não segue um padrão de movimento
+    int cur_movement_command;//Posicao do atual comando de movimento no vetor do padrão de movimento ligado a essa criatura
+    int movement_counter; //Incrementado a cada movimento, resetado por outras funções 
+    int action_cooldown;//Frames ate a proxima ação
     Vector2 pos; //Posi��o atual.
     int icon; //Imagem atual
     int faction; //Amigo, inimigo, neutro

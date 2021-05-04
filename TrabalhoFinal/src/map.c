@@ -52,31 +52,23 @@ int StrToDir(char* str){
     }
 }
 
-void MapFreeMobs(pGame_map map){
-    for(; map->n_mobs > 0; map->n_mobs--){
-        map->mobs[map->n_mobs].movement_pattern = NULL; //Os padrões de movimento são dealocados em outra função
-    }
-    free(map->mobs);
-    map->mobs = NULL;
-}
-
 void MapCreateMobV(pGame_map map, int amount){
-    map->n_mobs = amount;
-    if(map->mobs != NULL){
-        MapFreeMobs(map);
+    map->n_mobs = amount + 1;
+    if(amount > 0){
+        map->mobs = (pMob) malloc(sizeof(mob) * map->n_mobs); //+ 1 para o jogador
     }
-    if(amount){
-        map->mobs = (pMob) malloc(sizeof(mob) * (amount + 1)); //+ 1 para o jogador
+    else{
+        map->mobs = NULL;
     }
 }
 
 void MapCreateItemV(pGame_map map, int amount){
-    map->n_items = amount;
-    if(map->items != NULL){
-        MapFreeMobs(map);
-    }
+    map->n_items = amount + 1;
     if(amount > 0){
-        map->items = (pItem) malloc(sizeof(item) * (amount + 1)); //+ 1 para a saída
+        map->items = (pItem) malloc(sizeof(item) * map->n_items); //+ 1 para a saída
+    }
+    else{
+        map->items = NULL;
     }
 }
 
@@ -98,19 +90,17 @@ void MapCreateTurfs(pGame_map map){
 
 void MapCreateMovementPatterns(pGame_map map, int amount){
     map->n_mpatterns = amount;
-    if(map->movement_patterns != NULL){
-        free(map->movement_patterns);
-    }
     if(amount > 0){
         map->movement_patterns = (pMob_movement) malloc(sizeof(mob_movement) * amount);
     }
 }
 
 void MapFreeMap(pGame_map map){
-    MapFreeMobs(map);
-    free(map->movement_patterns);
-    free(map->items);
     free(map->turfs);
+    free(map->items);
+    free(map->mobs);
+    free(map->movement_patterns);
+    free(map);
 
 }
 
@@ -140,7 +130,6 @@ int LoadMobTypes(char* filename){
     rewind(mob_file);
 
     mob_type_amount = i / 3;
-    printf("Lendo [%d] criaturas do arquivo: %s\n", mob_type_amount,  filename);
 
     if(mob_type_amount){
         mob_types = (pMob) malloc(sizeof(mob) * mob_type_amount);
@@ -160,20 +149,17 @@ int LoadMobTypes(char* filename){
             fseek(mob_file, 2, SEEK_CUR);
             fgets(amnt_buffer, 3, mob_file);
             M->faction = atoi(amnt_buffer);
-
-            printf("Nova criatura [%d]: Vida=%d Icone=%d Faccao=%d\n", i, M->health, M->icon, M->faction);
         }
     }
     fclose(mob_file);
     return 1;
 }
 
-int LoadMap(char* filename){
+int LoadMap(char* filename, pGame_map map){
     FILE* map_file;
     if(!(map_file = fopen(filename, "r"))){
         return 0;
     }
-    //puts("Carregando o mapa...");
     int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_water = 0;
     char map_buffer[MAP_MAX_X], *substr;
 
@@ -193,8 +179,6 @@ int LoadMap(char* filename){
         n_mobs++;
     }
 
-    //printf("Padroes:%d Mobs:%d\n", n_patterns, n_mobs);
-
     fgets(map_buffer, MAP_MAX_X, map_file);
 
     bounds_x = atoi(strtok(map_buffer, ";"));
@@ -203,13 +187,9 @@ int LoadMap(char* filename){
     n_movables = atoi(strtok(NULL, ";")); //Blocos móveis
     n_water = atoi(strtok(NULL, ";")); //Água
 
-    //printf("Limites:%d|%d\n", bounds_x, bounds_y);
-    //printf("Chaves:%d Moveis:%d Agua:%d\n", n_keys, n_movables, n_water);
-
-    MapCreateMap(&cur_map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns);
+    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns);
     rewind(map_file);
 
-    //puts("Lendo informacoes...");
     //Le informações dos padrões de movimento das criaturas
     pMob_movement MM;
     pMovement_command MC;
@@ -217,33 +197,38 @@ int LoadMap(char* filename){
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
-        //puts("Lendo padrao...");
-        puts(map_buffer);
-        MM = &cur_map.movement_patterns[i];
+        MM = &map->movement_patterns[i];
         MM->type = atoi(strtok(map_buffer + 2, ";")); //Tipo de padrão
+        MM->movement_interval = atoi(strtok(NULL, ";")); //Intervalo de movimento
+        j = 0;
         while((substr = strtok(NULL, ";")) != NULL){
-            MC = &MM->commands[i];
+            MC = &MM->commands[j];
             MC->amount = atoi(substr);
             MC->dir = StrToDir(strtok(NULL, ";"));
+            j++;
         }
+        MM->command_amnt = j;
         i++;
     }
-    i = 0;
+    i = 1;
     //Le informações das criaturas
-    pMob M;
+    pMob M, MT;
     while(fgets(map_buffer, MAP_MAX_X, map_file)){
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
-        //puts("Lendo criatura");
-        M = &cur_map.mobs[i];
-        *M = mob_types[atoi(strtok(map_buffer + 2, ";"))]; //Copia os dados do tipo
+
+        M = &map->mobs[i];
+        MT = &mob_types[atoi(strtok(map_buffer + 2, ";"))]; //Copia os dados do tipo
+        M->health = MT->health;
+        M->icon = MT->icon;
+        M->faction = MT->faction;
         substr = strtok(NULL, ";");
         if(substr != NULL){
-            M->movement_pattern = &cur_map.movement_patterns[atoi(substr)]; //Aponta para um padrão de movimento
+            M->movement_pattern = atoi(substr); //Guarda o numero do padrao de movimento no vetor do mapa
         }
         else{
-            M->movement_pattern = NULL;
+            M->movement_pattern = -1;
         }
         i++;
     }
@@ -256,7 +241,7 @@ int LoadMap(char* filename){
     int keys_placed = 0, movables_placed = 0, water_placed = 0, pos;
     for(j = 0; j < bounds_y ; j++){
         for(i = 0; i < bounds_x; i++){
-            T = &pMAP_ACESS_TURF((&cur_map), i, j);
+            T = &pMAP_ACESS_TURF(map, i, j);
             map_c = fgetc(map_file);
             if(i == 0 || j == 0 || i == (bounds_x - 1) || j == (bounds_y - 1)){
                 T->solid = 1;
@@ -267,38 +252,47 @@ int LoadMap(char* filename){
                 }
                 if(map_c >= 'a' && map_c <= 'z'){
                     pos = CHAR2MOB_I(map_c);
-                    M = &cur_map.mobs[pos];
+                    M = &map->mobs[pos];
                     SetMobPos(M, i, j);
+                    M->action_cooldown = 0;
+                    M->cur_movement_command = 0;
                     M->id = pos;
                 }
                 else if(map_c == '@'){
-                    pos = n_mobs + movables_placed++;
-                    M = &cur_map.mobs[pos];
+                    pos = 1 + n_mobs + movables_placed++;
+                    M = &map->mobs[pos];
                     SetMobPos(M, i, j); //Blocos moveis sao as ultimas criaturas do vetor sempre
+                    M->faction = NEUTRAL;
+                    M->action_cooldown = 0;
+                    M->cur_movement_command = 0;
+                    M->movement_pattern = -1;
                     M->id = pos;
                 }
                 else if(map_c == 'P'){
-                    M = &cur_map.mobs[0]; //Jogador sempre é a primeira criatura
+                    M = &map->mobs[0]; //Jogador sempre é a primeira criatura
                     SetMobPos(M, i, j);
+                    M->action_cooldown = 0;
+                    M->cur_movement_command = 0;
+                    M->faction = FRIENDLY;
                     M->id = PLAYER_ID;
                 }
                 else if(map_c == '*'){
                     pos = keys_placed++;
-                    I = &cur_map.items[pos];
+                    I = &map->items[pos];
                     SetItemPos(I, i, j);
                     I->id = pos;
                     //Chamar função que define item como chave (coração)
                 }
                 else if(map_c == '='){
                     pos = n_keys + water_placed++;
-                    I = &cur_map.items[pos];
+                    I = &map->items[pos];
                     SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
                     I->id = pos;
                     //Chamar função que define item como agua
                 }
                 else if(map_c == 'B'){
                     pos = n_keys + n_water;
-                    I = &cur_map.items[0]; //A saída (Baú) sempre é o último item
+                    I = &map->items[pos]; //A saída (Baú) sempre é o último item
                     SetItemPos(I, i, j);
                     I->id = pos;
                     //Chamar função que define item como porta
@@ -307,7 +301,6 @@ int LoadMap(char* filename){
         }
         fseek(map_file, 2, SEEK_CUR); //Pula \n
     }
-
     fclose(map_file);
     return 1;
 }

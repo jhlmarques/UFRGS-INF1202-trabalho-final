@@ -34,8 +34,6 @@ void PrintMap_ASCII(pGame_map map);
 
 int StrToDir(char* str);
 
-void MapFreeMobs(pGame_map map);
-
 void MapCreateMobV(pGame_map map, int amount);
 
 void MapCreateItemV(pGame_map map, int amount);
@@ -50,7 +48,7 @@ void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np);
 
 int LoadMobTypes(char* filename);
 
-int LoadMap(char* filename);
+int LoadMap(char* filename, pGame_map map);
 
 #endif
 

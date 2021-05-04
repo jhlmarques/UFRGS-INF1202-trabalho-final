@@ -11,8 +11,8 @@ int IsAlive(pMob mob){
     return 0;
 }
 
-pMob get_mob(int mob_id){
-    return &cur_map.mobs[mob_id];
+pMob GetMob(int mob_id){
+    return &cur_map->mobs[mob_id];
 }
 
 int CanAttack(pMob mob){
@@ -20,8 +20,7 @@ int CanAttack(pMob mob){
 }
 
 int Push(pMob moved, int direction){
-    Vector2 dest_coord = moved->pos;
-    dest_coord = PointMoveDir(dest_coord, direction);
+    Vector2 dest_coord = PointMoveDir(moved->pos, direction);
     pTurf dest = GetTurf(dest_coord);
 
     if(pTURF_IS_OCCUPIED(dest)){
@@ -63,8 +62,8 @@ int MoveCheckInteractions(pMob moved){
         return 0;
     }
     if(pTURF_HAS_MOB(dest)){
-        pMob dest_mob = get_mob(dest->cur_mob);
-        if((moved->faction == dest_mob->faction) || (dest_mob->faction == NEUTRAL && moved->id == PLAYER_ID)){
+        pMob dest_mob = GetMob(dest->cur_mob);
+        if((moved->faction == dest_mob->faction) || ((dest_mob->faction == NEUTRAL) && (moved->id == PLAYER_ID))){
             if(!Push(dest_mob, moved->dir)){
                 return 0;
             }

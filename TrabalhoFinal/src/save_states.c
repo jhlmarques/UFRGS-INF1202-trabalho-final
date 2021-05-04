@@ -23,7 +23,8 @@ int LoadSaveFile(char* savefile_name, pSave_state saves_v){
     int save_amnt = Savefile_SavesAmnt(savefile_name);
 
     FILE* savefile;
-    if(!(savefile = fopen(savefile_name, "rb")) || (save_amnt < 0)){
+    if(!(savefile = fopen(savefile_name, "rb"))){
+        puts("Erro ao carregar as gravacoes!");
         return -1;
     }
 
@@ -66,7 +67,7 @@ void DeleteSave(char* savefile_name, int pos){
     FILE* savefile;
     if(!(savefile = fopen(savefile_name, "wb"))){
         return;
-    }    
+    }
     int i;
     save_state temp[MAX_SAVES];
     for(i = 0; i < pos; i++){
@@ -77,7 +78,6 @@ void DeleteSave(char* savefile_name, int pos){
         temp[i - 1] = all_saves[i];
         temp[i - 1].save_id = i;
     }
-
     fwrite(temp, sizeof(save_state), saves_loaded - 1, savefile);
     fclose(savefile);
 
