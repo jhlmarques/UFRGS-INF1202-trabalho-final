@@ -100,8 +100,6 @@ void MapFreeMap(pGame_map map){
     free(map->items);
     free(map->mobs);
     free(map->movement_patterns);
-    free(map);
-
 }
 
 void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np){
@@ -220,11 +218,9 @@ int LoadMap(char* filename, pGame_map map){
 
         M = &map->mobs[i];
         MT = &mob_types[atoi(strtok(map_buffer + 2, ";"))]; //Copia os dados do tipo
-        M->health = MT->health;
-        M->icon = MT->icon;
-        M->faction = MT->faction;
+        SetCommonMob(M, MT->health, MT->icon, MT->faction);
         substr = strtok(NULL, ";");
-        if(substr != NULL){
+        if(*substr != '\n'){
             M->movement_pattern = atoi(substr); //Guarda o numero do padrao de movimento no vetor do mapa
         }
         else{
@@ -253,48 +249,42 @@ int LoadMap(char* filename, pGame_map map){
                 if(map_c >= 'a' && map_c <= 'z'){
                     pos = CHAR2MOB_I(map_c);
                     M = &map->mobs[pos];
-                    SetMobPos(M, i, j);
-                    M->action_cooldown = 0;
-                    M->cur_movement_command = 0;
                     M->id = pos;
+                    SetMobPos(M, i, j);
                 }
                 else if(map_c == '@'){
                     pos = 1 + n_mobs + movables_placed++;
                     M = &map->mobs[pos];
-                    SetMobPos(M, i, j); //Blocos moveis sao as ultimas criaturas do vetor sempre
-                    M->faction = NEUTRAL;
-                    M->action_cooldown = 0;
-                    M->cur_movement_command = 0;
-                    M->movement_pattern = -1;
                     M->id = pos;
+                    SetMobPos(M, i, j); //Blocos moveis sao as ultimas criaturas do vetor sempre
+                    SetCommonMob(M, 1, 0, NEUTRAL);
+                    M->movement_pattern = -1;
                 }
                 else if(map_c == 'P'){
                     M = &map->mobs[0]; //Jogador sempre é a primeira criatura
-                    SetMobPos(M, i, j);
-                    M->action_cooldown = 0;
-                    M->cur_movement_command = 0;
-                    M->faction = FRIENDLY;
                     M->id = PLAYER_ID;
+                    SetMobPos(M, i, j);
+                    SetCommonMob(M, 1, 0, FRIENDLY);
                 }
                 else if(map_c == '*'){
                     pos = keys_placed++;
                     I = &map->items[pos];
-                    SetItemPos(I, i, j);
                     I->id = pos;
+                    SetItemPos(I, i, j);
                     //Chamar função que define item como chave (coração)
                 }
                 else if(map_c == '='){
                     pos = n_keys + water_placed++;
                     I = &map->items[pos];
-                    SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
                     I->id = pos;
+                    SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
                     //Chamar função que define item como agua
                 }
                 else if(map_c == 'B'){
                     pos = n_keys + n_water;
                     I = &map->items[pos]; //A saída (Baú) sempre é o último item
-                    SetItemPos(I, i, j);
                     I->id = pos;
+                    SetItemPos(I, i, j);
                     //Chamar função que define item como porta
                 }
             }

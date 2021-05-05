@@ -10,7 +10,6 @@ typedef struct mob *pMob;
 #define pTURF_HAS_MOB(pTurf) (pTurf->cur_mob > NO_ID)
 #define pTURF_IS_SOLID(pTurf) (pTurf->solid)
 #define pTURF_HAS_ITEM(pTurf) (pTurf->cur_item > NO_ID)
-#define pTURF_IS_OCCUPIED(pTurf) ((pTURF_HAS_MOB(pTurf)) || (pTURF_IS_SOLID(pTurf)) || (pTURF_HAS_ITEM(pTurf)))
 
 typedef struct turf{
     int solid; //Criaturas n�o podem se mover para turfs solidos
@@ -25,6 +24,5 @@ void TurfSetPos(pTurf T, float a, float b);
 
 pTurf GetTurf(Vector2 coord);
 
-int CanMove(pMob to_move, pTurf dest);
 
 #endif

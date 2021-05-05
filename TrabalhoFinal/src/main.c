@@ -63,6 +63,7 @@ int main(void) {
         else if(game_state == STATE_STOPPED_PLAYING){
             player_mob = NULL;
             MapFreeMap(cur_map);
+            cur_map = NULL;
             //Volta ao menu
             SetBasicMenu(&game_menu);
             game_state = STATE_MENU;

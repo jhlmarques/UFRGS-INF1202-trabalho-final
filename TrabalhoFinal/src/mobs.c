@@ -20,10 +20,11 @@ int CanAttack(pMob mob){
 }
 
 int Push(pMob moved, int direction){
-    Vector2 dest_coord = PointMoveDir(moved->pos, direction);
+    Vector2 dest_coord;
+    dest_coord = PointMoveDir(moved->pos, direction);
     pTurf dest = GetTurf(dest_coord);
 
-    if(pTURF_IS_OCCUPIED(dest)){
+    if((pTURF_HAS_MOB(dest)) || (pTURF_IS_SOLID(dest)) || (pTURF_HAS_ITEM(dest))){
         return 0;
     }
     SimpleMove(moved, dest);
@@ -63,10 +64,13 @@ int MoveCheckInteractions(pMob moved){
     }
     if(pTURF_HAS_MOB(dest)){
         pMob dest_mob = GetMob(dest->cur_mob);
-        if((moved->faction == dest_mob->faction) || ((dest_mob->faction == NEUTRAL) && (moved->id == PLAYER_ID))){
+
+        if((moved->faction == dest_mob->faction) || ((dest_mob->faction == NEUTRAL) && pMOB_IS_PLAYER(moved))){
+
             if(!Push(dest_mob, moved->dir)){
                 return 0;
             }
+
         }
         else if(dest_mob->faction == NEUTRAL){
             return 0;
@@ -92,4 +96,13 @@ void SetMobPos(pMob M, int x, int y){
     M->pos.y = y;
     pTurf T = GetTurf(M->pos);
     T->cur_mob = M->id;
+}
+
+void SetCommonMob(pMob M, int health, int icon, int faction){
+    M->health = health;
+    M->icon = icon;
+    M->faction = faction;
+    M->invincible = 0;
+    M->action_cooldown = 0;
+    M->cur_movement_command = 0;
 }

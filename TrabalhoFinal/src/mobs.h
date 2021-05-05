@@ -39,4 +39,6 @@ int MoveCheckInteractions(pMob moved);
 
 void SetMobPos(pMob M, int x, int y);
 
+void SetCommonMob(pMob M, int health, int icon, int faction);
+
 #endif
