@@ -17,6 +17,7 @@ void SetBasicMenu(pMenu game_menu){
 }
 
 void DrawMenu(pMenu game_menu){
+    DrawText(TextFormat("Selection: %d", game_menu->selection), 190, 100, 20, BLACK);
     switch(game_menu->state){
 
         case MAIN_MENU:{
@@ -58,8 +59,11 @@ void DrawMenu(pMenu game_menu){
             DrawText("CREDITOS\n Jose Henrique Lima Marques\n Matheus Almeida Silva", 190, 200, 20, BLUE);
             break;
         }
-
-
+        case MENU_PAUSED:{
+            DrawText("Voltar ao jogo\nMenu Principal", 190, 180, 20, BLACK);
+            DrawCircle(170, 140 + (game_menu->selection * 30), 5.0, BLACK);
+            break;
+        }
     }
 
 }
@@ -83,31 +87,32 @@ void MenuInput(pMenu game_menu){
     }
 }
 
-void MenuStepBack(pMenu game_menu, int* game_state){
+void MenuStepBack(pMenu game_menu){
     switch(game_menu->state){
         case MAIN_MENU:
         break;
         case MENU_NEWGAME:
-        game_menu->state = MAIN_MENU;
         game_menu->taking_char_input = 0;
-        break;
         case MENU_CREDITS:
         case MENU_LOADGAME:
         case MENU_DELETE_SAVE:
         game_menu->state = MAIN_MENU;
         break;
         case MENU_PAUSED:
-        game_menu->state = STATE_PLAYING;
+        game_state = STATE_PLAYING;
         break;
     }
 }
 
-void MenuOnSelect(pMenu game_menu, int* game_state){
+void MenuOnSelect(pMenu game_menu){
     switch(game_menu->state){
         case MAIN_MENU:
             switch(game_menu->selected){
                 case 1:
-                if(saves_loaded < MAX_SAVES){
+                if(saves_loaded < 0){
+                    break;
+                }
+                else if(saves_loaded < MAX_SAVES){
                     game_menu->state = MENU_NEWGAME;
                     game_menu->taking_char_input = 1;
                     memset(game_menu->input_buffer, '\0', PLAYER_NAME_LEN);
@@ -125,7 +130,7 @@ void MenuOnSelect(pMenu game_menu, int* game_state){
                 game_menu->state = MENU_CREDITS;
                 break;
                 case MAIN_MENU_MAX_SELECT: //Sair
-                *game_state = STATE_ENDED;
+                game_state = STATE_ENDED;
                 break;
             }
             break;
@@ -134,30 +139,32 @@ void MenuOnSelect(pMenu game_menu, int* game_state){
                 NewSaveState(all_saves + saves_loaded, game_menu->input_buffer);
                 WriteSaveToFile(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
                 saves_loaded++;
-                MenuStepBack(game_menu, game_state); //Por enquanto só volta ao menu
+                game_state = STATE_STARTED_PLAYING;
             }
             break;
         case MENU_LOADGAME:
-            MenuStepBack(game_menu, game_state); //Por enquanto só volta ao menu
+            MenuStepBack(game_menu); //Por enquanto só volta ao menu
             break;
         case MENU_DELETE_SAVE:
             DeleteSave(SAVEFILE_NAME, game_menu->selected);
             saves_loaded--;
-            MenuStepBack(game_menu, game_state);
+            MenuStepBack(game_menu);
             break;
         case MENU_PAUSED:
             switch(game_menu->selected){
                 case 1:
-                *game_state = STATE_PLAYING;
+                game_state = STATE_PLAYING;
                 break;
                 case 2:
-                *game_state = STATE_STOPPED_PLAYING;
+                game_state = STATE_STOPPED_PLAYING;
+                break;
             }
             break;
     }
 }
 
 void SetMenuMaxSelect(pMenu game_menu){
+    game_menu->selection = 1;
     switch(game_menu->state){
         case MAIN_MENU:
         game_menu->max_selection = MAIN_MENU_MAX_SELECT;
@@ -171,6 +178,8 @@ void SetMenuMaxSelect(pMenu game_menu){
         break;
         case MENU_CREDITS:
         game_menu->max_selection = 0;
+        case MENU_PAUSED:
+        game_menu->max_selection = 2;
         break;
     }
 }
