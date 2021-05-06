@@ -126,9 +126,13 @@ void MapCreateMovementPatterns(pGame_map map, int amount){
 
 void MapFreeMap(pGame_map map){
     free(map->turfs);
+    map->turfs = NULL;
     free(map->items);
+    map->items = NULL;
     free(map->mobs);
+    map->mobs = NULL;
     free(map->movement_patterns);
+    map->movement_patterns = NULL;
 }
 
 void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies){
@@ -139,6 +143,7 @@ void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nen
     MapCreateItemV(map, ni);
     MapCreateTurfs(map);
     map->enemies_left = nenemies;
+    map->points = 0;
 
 }
 

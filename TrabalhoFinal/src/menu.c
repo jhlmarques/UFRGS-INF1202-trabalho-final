@@ -30,7 +30,7 @@ void DrawMenu(pMenu game_menu){
             break;
         }
         case MENU_DELETE_SAVE:{
-            DrawText("Limite de gravações atingido!\nEscolha uma gravação para sobrescrever", 190, 100, 20, RED);
+            DrawText("Escolha uma gravação para deletar", 190, 100, 20, RED);
         }
         case MENU_LOADGAME:{
             if(saves_loaded < 0){
@@ -47,6 +47,7 @@ void DrawMenu(pMenu game_menu){
                      190, y_pos, 20, ORANGE);
                     y_pos += 30;
                 }
+                DrawText("Deletar", 190, y_pos, 20, RED);
                 if(saves_loaded){
                     DrawCircle(170, 180 + (game_menu->selection * 30), 5.0, BLACK);
                 }
@@ -144,7 +145,13 @@ void MenuOnSelect(pMenu game_menu){
             }
             break;
         case MENU_LOADGAME:
-            MenuStepBack(game_menu); //Por enquanto só volta ao menu
+            if(game_menu->selected == game_menu->max_selection){
+                game_menu->state = MENU_DELETE_SAVE;
+            }
+            else{
+                cur_save = &all_saves[game_menu->selected - 1];
+                game_state = STATE_LOADING_MAP;
+            }
             break;
         case MENU_DELETE_SAVE:
             DeleteSave(SAVEFILE_NAME, game_menu->selected);
@@ -175,7 +182,7 @@ void SetMenuMaxSelect(pMenu game_menu){
         break;
         case MENU_LOADGAME:
         case MENU_DELETE_SAVE:
-        game_menu->max_selection = saves_loaded;
+        game_menu->max_selection = saves_loaded + 1;
         break;
         case MENU_CREDITS:
         game_menu->max_selection = 0;

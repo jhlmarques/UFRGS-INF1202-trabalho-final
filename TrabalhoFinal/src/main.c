@@ -15,7 +15,6 @@ VARIÁVEIS GLOBAIS
 
 //MAPA
 pGame_map cur_map; //Mapa atual
-pGame_map all_maps; //Vetor de mapas
 int maps_loaded;//Quantidade de mapas carregados
 //GRAVAÇÕES
 pSave_state cur_save = NULL; //Gravação atual
@@ -69,15 +68,15 @@ int main(void) {
         }
         else if(game_state == STATE_LOADING_MAP){//LÓGICA PRÉ-JOGO
             //Grava progresso
-            WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
             if(!LoadCurMapFromMapList(MAPLIST_NAME, cur_save->cur_level)){
-                cur_save->cur_level = 1;
+                cur_save->cur_level = 0;
                 game_state = STATE_STOPPED_PLAYING;
             }
             else{
                 player_mob = &cur_map->mobs[0]; //Primeira criatura sempre é o jogador
                 game_state = STATE_PLAYING;
             }
+            WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
         }
         else if(game_state == STATE_STOPPED_PLAYING){//LÓGICA PÓS-JOGO - PRÉ-MENU
             player_mob = NULL;
@@ -110,7 +109,7 @@ int main(void) {
                 case STATE_PLAYING:
                 system("cls"); //Placeholder
                 printf("MAPA: %d VIDAS: %d PONTOS: %d INIMIGOS: %d\n", cur_save->cur_level, cur_save->lives, \
-                                                                        cur_save->points, cur_map->enemies_left);
+                                                                        (cur_save->points + cur_map->points), cur_map->enemies_left);
                 PrintMap_ASCII(cur_map);
                 break;
                 case STATE_MENU:
@@ -126,8 +125,10 @@ int main(void) {
     CloseWindow();
 
     player_mob = NULL;
+
     if(cur_map != NULL){
         MapFreeMap(cur_map);
+        free(cur_map);
     }
     free(mob_types);
 

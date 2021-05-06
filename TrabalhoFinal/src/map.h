@@ -32,6 +32,7 @@ typedef struct game_map{
     unsigned int bounds_x; //Limite x
     unsigned int bounds_y; //Limite y
     int enemies_left; //Numero de inimigos restantes
+    int points; //Pontos acumulados
 }game_map, *pGame_map;
 
 

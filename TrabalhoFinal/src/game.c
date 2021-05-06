@@ -89,7 +89,7 @@ void OnMobKilled(pMob killed){
             pItem I = GetItem(cur_map->n_items - 1); //Ultimo item sempre é a saída
             SetItemPos(I, I->pos.x, I->pos.y);
         }
-        cur_save->points += POINT_REWARD_ENEMY_DEFEATED;
+        cur_map->points += POINT_REWARD_ENEMY_DEFEATED;
     }
 }
 
@@ -99,5 +99,6 @@ void OnPlayerCollectKey(){
 
 void OnLevelEnd(){
     cur_save->cur_level++;
+    cur_save->points += cur_map->points;
     game_state = STATE_LOADING_MAP;
 }
