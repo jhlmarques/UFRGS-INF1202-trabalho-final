@@ -1,9 +1,27 @@
 #include "items.h"
 #include "turfs.h"
+#include "globals.h"
+#include "game.h"
 
 
-void ItemActivated(int item_id){
-    return;
+pItem GetItem(int item_id){
+    return &cur_map->items[item_id];
+}
+
+void ItemTouched(int item_id){
+    pItem I = GetItem(item_id);
+    switch(I->type){
+        case ITEM_KEY:
+        OnPlayerCollectKey();
+        GetTurf(I->pos)->cur_item = NO_ID;//Sai do mapa
+        break;
+        case ITEM_WATER:
+        OnPlayerKilled();
+        break;
+        case ITEM_EXIT:
+        OnLevelEnd();
+        break;
+    }
 }
 
 void SetItemPos(pItem I, int x, int y){

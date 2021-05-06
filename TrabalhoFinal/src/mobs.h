@@ -10,7 +10,7 @@ typedef struct turf *pTurf;
 
 typedef struct mob{
     int health; //Vida; para toda criatura, vida <= 0 significa que esta n�o interage
-    int invincible; //Nao pode ter sua vida reduzida
+    int powered; //Se ligado, ganha das outras facções não-neutras
     int dir; //Direção do movimento
     int movement_pattern; //Se menor que zero, não segue um padrão de movimento
     int cur_movement_command;//Posicao do atual comando de movimento no vetor do padrão de movimento ligado a essa criatura
@@ -27,9 +27,13 @@ typedef struct mob{
 int IsAlive(pMob mob);
 
 
-int CanAttack(pMob mob);
+pMob GetMob(int mob_id);
+
+int CanAttack(pMob attacker, pMob attacked);
 
 int Push(pMob moved, int direction);
+
+void OnAttacked(pMob Attacked);
 
 int Attack(pMob Attacker, pMob Attacked);
 
@@ -39,6 +43,6 @@ int MoveCheckInteractions(pMob moved);
 
 void SetMobPos(pMob M, int x, int y);
 
-void SetCommonMob(pMob M, int health, int icon, int faction);
+void SetBasicMob(pMob M, int health, int icon, int faction);
 
 #endif

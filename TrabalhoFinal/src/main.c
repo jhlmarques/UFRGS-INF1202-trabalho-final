@@ -17,13 +17,13 @@ int saves_loaded; //Última quantidade de gravações lidas
 pMob mob_types; //Vetor com todos tipos de criatura (DINAMICO)
 int mob_type_amount; //Tamanho do vetor acima
 int game_state = STATE_MENU; //Estado do jogo
+pMob player_mob; //Criatura controlada pelo jogador
 
 int main(void) {
     const int screenWidth = SCREENWIDTH;
     const int screenHeight = SCREENHEIGHT;
     int menu_oldstate;
     menu game_menu;
-    pMob player_mob;
 
     SetBasicMenu(&game_menu);
     saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
@@ -76,7 +76,7 @@ int main(void) {
                 SetMenuMaxSelect(&game_menu);
             }
             else{
-                GameLoop(player_mob);
+                GameLoop();
             }
         }
 

@@ -5,12 +5,15 @@
 #include "raylib.h"
 
 typedef struct item{
-    Vector2 pos;
-    int id;
+    Vector2 pos; //Posição
+    int type; //Tipo de item
+    int id; //Identificador
 
 }item, *pItem;
 
-void ItemActivated(int item_id);
+pItem GetItem(int item_id);
+
+void ItemTouched(int item_id);
 
 void SetItemPos(pItem I, int x, int y);
 

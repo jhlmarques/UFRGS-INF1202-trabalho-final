@@ -1,6 +1,19 @@
+#ifndef _game_h_
+
 #include "mobs.h"
 
 int CheckPaused();
-void GameLoop(pMob player_mob);
-void PlayerInput(pMob player_mob);
+
+void GameLoop();
+
+void PlayerInput();
+
 void MobAction();
+
+void OnPlayerKilled();
+
+void OnPlayerCollectKey();
+
+void OnLevelEnd();
+
+#endif
