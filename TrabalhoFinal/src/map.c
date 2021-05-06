@@ -126,20 +126,24 @@ void MapCreateMovementPatterns(pGame_map map, int amount){
 
 void MapFreeMap(pGame_map map){
     free(map->turfs);
+    map->turfs = NULL;
     free(map->items);
+    map->items = NULL;
     free(map->mobs);
+    map->mobs = NULL;
     free(map->movement_patterns);
+    map->movement_patterns = NULL;
 }
 
-void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nk){
+void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies){
     map->bounds_x = bx;
     map->bounds_y = by;
     MapCreateMobV(map, nm);
     MapCreateMovementPatterns(map, np);
     MapCreateItemV(map, ni);
     MapCreateTurfs(map);
-    map->n_keys = nk;
-    map->keys_collected = 0;
+    map->enemies_left = nenemies;
+    map->points = 0;
 
 }
 
@@ -212,11 +216,11 @@ int LoadMap(char* filename, pGame_map map){
 
     bounds_x = atoi(strtok(map_buffer, ";"));
     bounds_y = atoi(strtok(NULL, ";"));
-    n_keys = atoi(strtok(NULL, ";"));
+    n_keys = n_mobs;
     n_movables = atoi(strtok(NULL, ";")); //Blocos móveis
     n_water = atoi(strtok(NULL, ";")); //Água
 
-    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns, n_keys);
+    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns, n_mobs);
     rewind(map_file);
 
     //Le informações dos padrões de movimento das criaturas
@@ -227,8 +231,7 @@ int LoadMap(char* filename, pGame_map map){
             break;
         }
         MM = &map->movement_patterns[i];
-        MM->type = atoi(strtok(map_buffer + 2, ";")); //Tipo de padrão
-        MM->movement_interval = atoi(strtok(NULL, ";")); //Intervalo de movimento
+        MM->movement_interval = atoi(strtok(map_buffer + 2, ";")); //Intervalo de movimento
         j = 0;
         while((substr = strtok(NULL, ";")) != NULL){
             MC = &MM->commands[j];
@@ -326,4 +329,27 @@ int LoadMap(char* filename, pGame_map map){
     }
     fclose(map_file);
     return 1;
+}
+
+int LoadCurMapFromMapList(char* map_list_file, int index){
+    FILE* map_list;
+    if(!(map_list = fopen(map_list_file, "r"))){
+        return 0;
+    }
+    int i = 0, len;
+    char filename_buffer[100];
+    while(fgets(filename_buffer, 100, map_list) != NULL){
+        if(i == index){
+            len = strlen(filename_buffer);
+            if(filename_buffer[len - 1] == '\n'){//fgets pode pegar \n se não é o fim do arquivo
+                filename_buffer[len - 1] = '\0'; //Encurta a string
+            }
+            LoadMap(filename_buffer, cur_map);
+            fclose(map_list);
+            return 1;
+        }
+        i++;
+    }
+    fclose(map_list);
+    return 0;
 }

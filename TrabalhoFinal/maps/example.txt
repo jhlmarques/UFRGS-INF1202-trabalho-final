@@ -1,8 +1,8 @@
-(A-Z): TipoDeMovimento;IntervaloDeMovimento;passos1;dir1;passos2;dir2; ... ;passosn;dirn MAX 10
+(A-Z): IntervaloDeMovimento;passos1;dir1;passos2;dir2; ... ;passosn;dirn (MAXIMO DEFINIDO EM DEFINES.H)
 
-simbolo(a-z):Tipo;Movimento
+simbolo(a-z):Tipo;Movimento (TIPOS ENCONTRADS EM MOB_DEFINITIONS.TXT)
 
-LarguraDoMapa;AlturaDoMapa;NumeroDeChaves
+LarguraDoMapa;AlturaDoMapa;BlocosMoveis;Aguas
 
 ##########
 #..*....B#
@@ -24,4 +24,5 @@ P = Jogador
 = = Agua
 * = Chave
 
+É essencial que todos valores estejam escritos corretamente
 

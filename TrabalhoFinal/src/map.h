@@ -5,15 +5,15 @@
 #include "items.h"
 #include "turfs.h"
 
-#define ASCII_TURF_EMPTY '.'
-#define ASCII_TURF_SOLID '#'
-#define ASCII_TURF_HAS_PLAYER 'P'
+#define ASCII_TURF_EMPTY ' '
+#define ASCII_TURF_SOLID 'P'
+#define ASCII_TURF_HAS_PLAYER '@'
 #define ASCII_TURF_HAS_FRIENDLY 'F'
-#define ASCII_TURF_HAS_HOSTILE 'H'
-#define ASCII_TURF_HAS_NEUTRAL '@'
-#define ASCII_TURF_HAS_KEY '*'
-#define ASCII_TURF_HAS_WATER '='
-#define ASCII_TURF_HAS_DOOR 'B'
+#define ASCII_TURF_HAS_HOSTILE 'E'
+#define ASCII_TURF_HAS_NEUTRAL 'B'
+#define ASCII_TURF_HAS_KEY 'C'
+#define ASCII_TURF_HAS_WATER 'A'
+#define ASCII_TURF_HAS_DOOR 'T'
 #define ASCII_TURF_HAS_MOBANDITEM 'X'
 
 #define pMAP_ACESS_TURF(map, x, y) (map->turfs[y * map->bounds_x + x])
@@ -29,10 +29,10 @@ typedef struct game_map{
     unsigned int n_mobs; //Total de criaturas
     unsigned int n_items; //Total de items
     unsigned int n_mpatterns; //Total de padroes de movimento
-    unsigned int n_keys; //Numero de chaves a serem coletadas
     unsigned int bounds_x; //Limite x
     unsigned int bounds_y; //Limite y
-    int keys_collected; //Numero de chaves coletadas
+    int enemies_left; //Numero de inimigos restantes
+    int points; //Pontos acumulados
 }game_map, *pGame_map;
 
 
@@ -51,11 +51,13 @@ void MapCreateMovementPatterns(pGame_map map, int amount);
 
 void MapFreeMap(pGame_map map);
 
-void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nk);
+void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies);
 
 int LoadMobTypes(char* filename);
 
 int LoadMap(char* filename, pGame_map map);
+
+int LoadCurMapFromMapList(char* map_list_file, int index);
 
 #endif
 

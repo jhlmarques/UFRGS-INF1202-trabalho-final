@@ -13,8 +13,6 @@ typedef struct mob_movement{
     int movement_interval; //Quantos movimentos do jogador at� essa criatura se mover
     int command_amnt; //Quantidade de comandos
     movement_command commands[MAX_MOVEMENT_COMMANDS];//Comandos
-    int type;
-
 }mob_movement, *pMob_movement;
 
 #endif

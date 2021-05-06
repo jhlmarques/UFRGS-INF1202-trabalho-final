@@ -38,16 +38,12 @@ int LoadSaveFile(char* savefile_name, pSave_state saves_v){
 }
 
 int WriteSaveToFile(char* savefile_name, pSave_state save_to_write, int pos){
-    int append = (saves_loaded > 0 || pos > saves_loaded);
-
     FILE* savefile;
-    if(!(savefile = fopen(savefile_name, append? "ab" : "r+b"))){
+    if(!(savefile = fopen(savefile_name, "r+b"))){
         return 0;
     }
 
-    if(!append){
-        fseek(savefile, pos * sizeof(save_state), SEEK_SET);
-    }
+    fseek(savefile, pos * sizeof(save_state), SEEK_SET);
 
     fwrite(save_to_write, sizeof(save_state), 1, savefile);
     fclose(savefile);
@@ -55,10 +51,10 @@ int WriteSaveToFile(char* savefile_name, pSave_state save_to_write, int pos){
     return 1;
 }
 
-void NewSaveState(pSave_state save, char* p_name){
+void NewSaveState(pSave_state save, char* p_name, int id){
     strcpy(save->player_name, p_name);
-    save->save_id = saves_loaded + 1;
-    save->cur_level = 1;
+    save->save_id = id;
+    save->cur_level = 0;
     save->lives = 3;
     save->points = 0;
 }
@@ -72,7 +68,7 @@ void DeleteSave(char* savefile_name, int pos){
     save_state temp[MAX_SAVES];
     for(i = 0; i < pos; i++){
         temp[i] = all_saves[i];
-        temp[i].save_id = i + 1;
+        temp[i].save_id = i;
     }
     for(i = pos + 1; i < MAX_SAVES; i++){
         temp[i - 1] = all_saves[i];

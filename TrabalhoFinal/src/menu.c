@@ -17,7 +17,6 @@ void SetBasicMenu(pMenu game_menu){
 }
 
 void DrawMenu(pMenu game_menu){
-    DrawText(TextFormat("Selection: %d", game_menu->selection), 190, 100, 20, BLACK);
     switch(game_menu->state){
 
         case MAIN_MENU:{
@@ -31,7 +30,7 @@ void DrawMenu(pMenu game_menu){
             break;
         }
         case MENU_DELETE_SAVE:{
-            DrawText("Limite de gravações atingido!\nEscolha uma gravação para sobrescrever", 190, 100, 20, RED);
+            DrawText("Escolha uma gravação para deletar", 190, 100, 20, RED);
         }
         case MENU_LOADGAME:{
             if(saves_loaded < 0){
@@ -44,10 +43,11 @@ void DrawMenu(pMenu game_menu){
                 for(i = 0; i < saves_loaded; i++){
                     save = all_saves + i;
                     DrawText(TextFormat("%d - %s: Fase: %d Vidas: %d Pontos: %d", \
-                    save->save_id, save->player_name, save->cur_level, save->lives, save->points),\
+                    save->save_id + 1, save->player_name, save->cur_level, save->lives, save->points),\
                      190, y_pos, 20, ORANGE);
                     y_pos += 30;
                 }
+                DrawText("Deletar", 190, y_pos, 20, RED);
                 if(saves_loaded){
                     DrawCircle(170, 180 + (game_menu->selection * 30), 5.0, BLACK);
                 }
@@ -136,15 +136,22 @@ void MenuOnSelect(pMenu game_menu){
             break;
         case MENU_NEWGAME:
             if(game_menu->buffer_pos > 0 && saves_loaded < MAX_SAVES){
-                NewSaveState(all_saves + saves_loaded, game_menu->input_buffer);
-                WriteSaveToFile(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
+                pSave_state new = all_saves + saves_loaded;
+                NewSaveState(new, game_menu->input_buffer, saves_loaded);
+                WriteSaveToFile(SAVEFILE_NAME, new, saves_loaded);
                 cur_save = &all_saves[saves_loaded];
                 saves_loaded++;
-                game_state = STATE_STARTED_PLAYING;
+                game_state = STATE_LOADING_MAP;
             }
             break;
         case MENU_LOADGAME:
-            MenuStepBack(game_menu); //Por enquanto só volta ao menu
+            if(game_menu->selected == game_menu->max_selection){
+                game_menu->state = MENU_DELETE_SAVE;
+            }
+            else{
+                cur_save = &all_saves[game_menu->selected - 1];
+                game_state = STATE_LOADING_MAP;
+            }
             break;
         case MENU_DELETE_SAVE:
             DeleteSave(SAVEFILE_NAME, game_menu->selected);
@@ -175,7 +182,7 @@ void SetMenuMaxSelect(pMenu game_menu){
         break;
         case MENU_LOADGAME:
         case MENU_DELETE_SAVE:
-        game_menu->max_selection = saves_loaded;
+        game_menu->max_selection = saves_loaded + 1;
         break;
         case MENU_CREDITS:
         game_menu->max_selection = 0;
