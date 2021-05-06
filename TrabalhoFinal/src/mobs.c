@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "raylib.h"
 #include "point.h"
+#include "game.h"
 
 int IsAlive(pMob mob){
     if(mob->health > 0){
@@ -15,7 +16,12 @@ pMob GetMob(int mob_id){
     return &cur_map->mobs[mob_id];
 }
 
-int CanAttack(pMob mob){
+int CanAttack(pMob attacker, pMob attacked){
+    if(attacker->faction == FRIENDLY){
+        if(!attacker->powered || attacked->powered){
+            return 0;
+        }
+    }
     return 1;
 }
 
@@ -31,20 +37,30 @@ int Push(pMob moved, int direction){
     return 1;
 }
 
+void OnAttacked(pMob Attacked){
+    if(--Attacked->health <= 0){
+        pTurf T = GetTurf(Attacked->pos);
+        T->cur_mob = NO_ID;
+        if(pMOB_IS_PLAYER(Attacked)){
+            OnPlayerKilled();
+        }
+    }
+}
+
 //retorna 1 se o atacante venceu, 0 para outros casos
 int Attack(pMob Attacker, pMob Attacked){
-    if(Attacked->invincible){
-        if(Attacker->invincible){
-            return 0;
+    if(Attacked->powered){
+        if(!Attacker->powered){
+            Attack(Attacked, Attacker);
         }
-        return Attack(Attacked, Attacker);
+        return 0;
     }
-    if(CanAttack(Attacker)){
-        Attacked->health--;
+    if(CanAttack(Attacker, Attacked)){
+        OnAttacked(Attacked);
+        Attacker->powered = MAX(0, Attacker->powered - 1);
         return 1;
     }
     return 0;
-
 }
 
 void SimpleMove(pMob moved, pTurf dest){
@@ -66,27 +82,32 @@ int MoveCheckInteractions(pMob moved){
         pMob dest_mob = GetMob(dest->cur_mob);
 
         if((moved->faction == dest_mob->faction) || ((dest_mob->faction == NEUTRAL) && pMOB_IS_PLAYER(moved))){
-
             if(!Push(dest_mob, moved->dir)){
                 return 0;
             }
-
         }
         else if(dest_mob->faction == NEUTRAL){
             return 0;
         }
         else{
-            Attack(moved, dest_mob);
-            if(IsAlive(dest_mob)){
-                return 0;
+            if(Attack(moved, dest_mob)){
+                if(!IsAlive(dest_mob)){
+                    return 1;
+                }
             }
+            return 0;
        }
     }
-    if(pTURF_HAS_ITEM(dest) && pMOB_IS_PLAYER(moved)){
-        ItemActivated(dest->cur_item);
+    if(pTURF_HAS_ITEM(dest) && !pMOB_IS_PLAYER(moved)){
+        return 0;
     }
 
-    SimpleMove(moved, dest);
+    SimpleMove(moved, dest); //Tem que ocorrer antes
+
+    if(pTURF_HAS_ITEM(dest) && pMOB_IS_PLAYER(moved)){
+        ItemTouched(dest->cur_item);
+    }
+
     return 1;
 
 }
@@ -98,11 +119,11 @@ void SetMobPos(pMob M, int x, int y){
     T->cur_mob = M->id;
 }
 
-void SetCommonMob(pMob M, int health, int icon, int faction){
+void SetBasicMob(pMob M, int health, int icon, int faction){
     M->health = health;
     M->icon = icon;
     M->faction = faction;
-    M->invincible = 0;
+    M->powered = 0;
     M->action_cooldown = 0;
     M->cur_movement_command = 0;
 }

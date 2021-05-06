@@ -7,15 +7,15 @@ int CheckPaused(){
     return IsKeyPressed(KEY_ESCAPE);
 }
 
-void GameLoop(pMob player_mob){
+void GameLoop(){
     if(game_state == STATE_PLAYING){
-        PlayerInput(player_mob);
+        PlayerInput();
         MobAction();
 
     }
 }
 
-void PlayerInput(pMob player_mob){
+void PlayerInput(){
     //Movimento
     if(player_mob->action_cooldown > 0){
         player_mob->action_cooldown--;
@@ -59,17 +59,38 @@ void MobAction(){
             MM = cur_map->movement_patterns + M->movement_pattern;
             M->action_cooldown = MM->movement_interval;
             MC = &MM->commands[M->cur_movement_command];
-            
+
             if(M->movement_counter >= MC->amount){
                 M->movement_counter = 0;
-                M->cur_movement_command = (M->cur_movement_command + 1) >= MM->command_amnt ? 0 : (M->cur_movement_command + 1); 
+                M->cur_movement_command = (M->cur_movement_command + 1) >= MM->command_amnt ? 0 : (M->cur_movement_command + 1);
                 MC = &MM->commands[M->cur_movement_command];
             }
-            
+
             M->dir = MC->dir;
             M->movement_counter++;
             MoveCheckInteractions(M);
         }
     }
 
+}
+
+void OnPlayerKilled(){
+    if(--cur_save->lives == 0){
+        game_state = STATE_STOPPED_PLAYING;
+    }
+    else{
+        SimpleMove(player_mob, GetTurf(cur_map->player_start_pos));
+    }
+}
+
+void OnPlayerCollectKey(){
+    if(++cur_map->keys_collected == cur_map->n_keys){
+        pItem I = GetItem(cur_map->n_items - 1); //Ultimo item sempre é a saída
+        SetItemPos(I, I->pos.x, I->pos.y);
+    }
+    player_mob->powered++; //Ganha poder;
+}
+
+void OnLevelEnd(){
+    game_state = STATE_STOPPED_PLAYING;
 }

@@ -11,6 +11,8 @@ void PrintMap_ASCII(pGame_map map){
     int i, j;
     char c;
     pTurf T;
+    pMob M;
+    pItem I;
     for(i = 0; i < map->bounds_y; i++){
         for(j = 0; j < map->bounds_x; j++){
             T = &pMAP_ACESS_TURF(map, j, i);
@@ -19,10 +21,37 @@ void PrintMap_ASCII(pGame_map map){
             }
             else if(pTURF_HAS_MOB(T) || pTURF_HAS_ITEM(T)){
                 if(!pTURF_HAS_ITEM(T)){
-                    c = ASCII_TURF_HAS_MOB;
+                    M = GetMob(T->cur_mob);
+                    switch(M->faction){
+                        case NEUTRAL:
+                        c = ASCII_TURF_HAS_NEUTRAL;
+                        break;
+                        case FRIENDLY:
+                        if(pMOB_IS_PLAYER(M)){
+                            c = ASCII_TURF_HAS_PLAYER;
+                        }
+                        else{
+                            c = ASCII_TURF_HAS_FRIENDLY;
+                        }
+                        break;
+                        case HOSTILE:
+                        c = ASCII_TURF_HAS_HOSTILE;
+                        break;
+                    }
                 }
                 else if(!pTURF_HAS_MOB(T)){
-                    c = ASCII_TURF_HAS_ITEM;
+                    I = GetItem(T->cur_item);
+                    switch(I->type){
+                        case ITEM_KEY:
+                        c = ASCII_TURF_HAS_KEY;
+                        break;
+                        case ITEM_WATER:
+                        c = ASCII_TURF_HAS_WATER;
+                        break;
+                        case ITEM_EXIT:
+                        c = ASCII_TURF_HAS_DOOR;
+                        break;
+                    }
                 }
                 else{
                     c = ASCII_TURF_HAS_MOBANDITEM;
@@ -102,13 +131,15 @@ void MapFreeMap(pGame_map map){
     free(map->movement_patterns);
 }
 
-void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np){
+void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nk){
     map->bounds_x = bx;
     map->bounds_y = by;
     MapCreateMobV(map, nm);
     MapCreateMovementPatterns(map, np);
     MapCreateItemV(map, ni);
     MapCreateTurfs(map);
+    map->n_keys = nk;
+    map->keys_collected = 0;
 
 }
 
@@ -185,7 +216,7 @@ int LoadMap(char* filename, pGame_map map){
     n_movables = atoi(strtok(NULL, ";")); //Blocos móveis
     n_water = atoi(strtok(NULL, ";")); //Água
 
-    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns);
+    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns, n_keys);
     rewind(map_file);
 
     //Le informações dos padrões de movimento das criaturas
@@ -218,7 +249,7 @@ int LoadMap(char* filename, pGame_map map){
 
         M = &map->mobs[i];
         MT = &mob_types[atoi(strtok(map_buffer + 2, ";"))]; //Copia os dados do tipo
-        SetCommonMob(M, MT->health, MT->icon, MT->faction);
+        SetBasicMob(M, MT->health, MT->icon, MT->faction);
         substr = strtok(NULL, ";");
         if(*substr != '\n'){
             M->movement_pattern = atoi(substr); //Guarda o numero do padrao de movimento no vetor do mapa
@@ -257,35 +288,37 @@ int LoadMap(char* filename, pGame_map map){
                     M = &map->mobs[pos];
                     M->id = pos;
                     SetMobPos(M, i, j); //Blocos moveis sao as ultimas criaturas do vetor sempre
-                    SetCommonMob(M, 1, 0, NEUTRAL);
+                    SetBasicMob(M, 1, 0, NEUTRAL);
                     M->movement_pattern = -1;
                 }
                 else if(map_c == 'P'){
                     M = &map->mobs[0]; //Jogador sempre é a primeira criatura
                     M->id = PLAYER_ID;
                     SetMobPos(M, i, j);
-                    SetCommonMob(M, 1, 0, FRIENDLY);
+                    SetBasicMob(M, 1, 0, FRIENDLY);
+                    map->player_start_pos = M->pos;
                 }
                 else if(map_c == '*'){
                     pos = keys_placed++;
                     I = &map->items[pos];
                     I->id = pos;
                     SetItemPos(I, i, j);
-                    //Chamar função que define item como chave (coração)
+                    I->type = ITEM_KEY;
                 }
                 else if(map_c == '='){
                     pos = n_keys + water_placed++;
                     I = &map->items[pos];
                     I->id = pos;
                     SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
-                    //Chamar função que define item como agua
+                    I->type = ITEM_WATER;
                 }
                 else if(map_c == 'B'){
                     pos = n_keys + n_water;
                     I = &map->items[pos]; //A saída (Baú) sempre é o último item
                     I->id = pos;
-                    SetItemPos(I, i, j);
-                    //Chamar função que define item como porta
+                    I->pos.x = i; //Não está no mapa
+                    I->pos.y = j;
+                    I->type = ITEM_EXIT;
                 }
             }
         }

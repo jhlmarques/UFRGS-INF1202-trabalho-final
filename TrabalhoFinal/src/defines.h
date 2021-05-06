@@ -54,8 +54,9 @@
 #define SOUTH 3
 #define WEST 4
 
-#define MAP_SIGNAL_KEY_COLLECTED (1<<0)
-#define MAP_SIGNAL_PLAYER_DEFEATED (1<<1)
+#define ITEM_KEY 1
+#define ITEM_WATER 2
+#define ITEM_EXIT 3
 
 
 

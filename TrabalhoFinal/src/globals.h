@@ -15,6 +15,7 @@ extern int saves_loaded; //Última quantidade de gravações lidas
 extern pMob mob_types; //Vetor com todos tipos de criatura
 extern int mob_type_amount; //Tamanho do vetor acima
 extern int game_state; //Estado do jogo 
+extern pMob player_mob; //Criatura controlada pelo jogador
 
 #endif
 

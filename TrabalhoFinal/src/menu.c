@@ -138,6 +138,7 @@ void MenuOnSelect(pMenu game_menu){
             if(game_menu->buffer_pos > 0 && saves_loaded < MAX_SAVES){
                 NewSaveState(all_saves + saves_loaded, game_menu->input_buffer);
                 WriteSaveToFile(SAVEFILE_NAME, all_saves + saves_loaded, saves_loaded + 1);
+                cur_save = &all_saves[saves_loaded];
                 saves_loaded++;
                 game_state = STATE_STARTED_PLAYING;
             }
