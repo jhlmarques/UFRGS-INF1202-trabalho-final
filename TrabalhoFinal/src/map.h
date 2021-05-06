@@ -5,15 +5,15 @@
 #include "items.h"
 #include "turfs.h"
 
-#define ASCII_TURF_EMPTY '.'
-#define ASCII_TURF_SOLID '#'
-#define ASCII_TURF_HAS_PLAYER 'P'
+#define ASCII_TURF_EMPTY ' '
+#define ASCII_TURF_SOLID 'P'
+#define ASCII_TURF_HAS_PLAYER '@'
 #define ASCII_TURF_HAS_FRIENDLY 'F'
-#define ASCII_TURF_HAS_HOSTILE 'H'
-#define ASCII_TURF_HAS_NEUTRAL '@'
-#define ASCII_TURF_HAS_KEY '*'
-#define ASCII_TURF_HAS_WATER '='
-#define ASCII_TURF_HAS_DOOR 'B'
+#define ASCII_TURF_HAS_HOSTILE 'E'
+#define ASCII_TURF_HAS_NEUTRAL 'B'
+#define ASCII_TURF_HAS_KEY 'C'
+#define ASCII_TURF_HAS_WATER 'A'
+#define ASCII_TURF_HAS_DOOR 'T'
 #define ASCII_TURF_HAS_MOBANDITEM 'X'
 
 #define pMAP_ACESS_TURF(map, x, y) (map->turfs[y * map->bounds_x + x])
