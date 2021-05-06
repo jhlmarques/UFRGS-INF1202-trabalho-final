@@ -18,7 +18,7 @@ int LoadSaveFile(char* savefile_name, pSave_state saves_v);
 
 int WriteSaveToFile(char* savefile_name, pSave_state save_to_write, int pos);
 
-void NewSaveState(pSave_state save, char* p_name);
+void NewSaveState(pSave_state save, char* p_name, int id);
 
 void DeleteSave(char* savefile_name, int pos);
 

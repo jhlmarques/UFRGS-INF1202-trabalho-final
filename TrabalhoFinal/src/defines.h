@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #define SAVEFILE_NAME "saves.save"
+#define MAPLIST_NAME "maps/maplist.txt"
 #define MOB_DEF_FILE "mob_definitions.txt"
 #define MAX_SAVES 4
 
@@ -14,7 +15,7 @@
 
 #define STATE_MENU 1
 #define STATE_PLAYING 2
-#define STATE_STARTED_PLAYING 3
+#define STATE_LOADING_MAP 3
 #define STATE_STOPPED_PLAYING 4
 #define STATE_ENDED -1
 
@@ -40,7 +41,7 @@
 #define PLAYER_ID 0
 #define NO_ID -1
 
-#define MOVEMENT_BOUNCE (1<<0) //Ao atingir uma parede, se move na dire��o oposta
+#define POINT_REWARD_ENEMY_DEFEATED 100
 
 #define PLAYER_NAME_LEN 9 //8 caracteres
 

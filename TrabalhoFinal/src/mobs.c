@@ -44,6 +44,9 @@ void OnAttacked(pMob Attacked){
         if(pMOB_IS_PLAYER(Attacked)){
             OnPlayerKilled();
         }
+        else{
+            OnMobKilled(Attacked);
+        }
     }
 }
 

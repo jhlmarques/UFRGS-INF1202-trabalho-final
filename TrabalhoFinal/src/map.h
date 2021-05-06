@@ -29,10 +29,9 @@ typedef struct game_map{
     unsigned int n_mobs; //Total de criaturas
     unsigned int n_items; //Total de items
     unsigned int n_mpatterns; //Total de padroes de movimento
-    unsigned int n_keys; //Numero de chaves a serem coletadas
     unsigned int bounds_x; //Limite x
     unsigned int bounds_y; //Limite y
-    int keys_collected; //Numero de chaves coletadas
+    int enemies_left; //Numero de inimigos restantes
 }game_map, *pGame_map;
 
 
@@ -51,11 +50,13 @@ void MapCreateMovementPatterns(pGame_map map, int amount);
 
 void MapFreeMap(pGame_map map);
 
-void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nk);
+void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies);
 
 int LoadMobTypes(char* filename);
 
 int LoadMap(char* filename, pGame_map map);
+
+int LoadCurMapFromMapList(char* map_list_file, int index);
 
 #endif
 

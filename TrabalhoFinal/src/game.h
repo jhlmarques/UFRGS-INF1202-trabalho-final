@@ -12,6 +12,8 @@ void MobAction();
 
 void OnPlayerKilled();
 
+void OnMobKilled(pMob killed);
+
 void OnPlayerCollectKey();
 
 void OnLevelEnd();
