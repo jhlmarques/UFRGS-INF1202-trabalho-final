@@ -40,7 +40,15 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="src/defines.h" />
+		<Unit filename="src/game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/game.h" />
 		<Unit filename="src/globals.h" />
+		<Unit filename="src/graphics_draw.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/graphics_draw.h" />
 		<Unit filename="src/items.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -61,19 +69,19 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/mobs.h" />
-		<Unit filename="src/player_movement.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/player_movement.h" />
 		<Unit filename="src/point.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/point.h" />
+		<Unit filename="src/save_states.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/save_states.h" />
 		<Unit filename="src/turfs.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/turfs.h" />
+		<Unit filename="textures/scarfy.png" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
