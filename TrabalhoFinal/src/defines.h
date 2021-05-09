@@ -49,9 +49,11 @@
 #define POINTS_EXTRA_LIFE 10
 
 //ITENS
-#define ITEM_KEY 1
+
+#define ITEM_POWER 1
 #define ITEM_WATER 2
-#define ITEM_EXIT 3
+#define ITEM_KEY 3
+#define ITEM_EXIT 4
 
 //RAYLIB E GRAFICOS
 #define WINDOW_NAME "Trabalho Final - Jose Henrique Lima Marques e Matheus Almeida Silva"

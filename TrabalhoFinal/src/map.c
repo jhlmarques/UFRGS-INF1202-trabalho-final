@@ -92,9 +92,9 @@ void MapCreateMobV(pGame_map map, int amount){
 }
 
 void MapCreateItemV(pGame_map map, int amount){
-    map->n_items = amount + 1;
+    map->n_items = amount + 2;
     if(amount > 0){
-        map->items = (pItem) malloc(sizeof(item) * map->n_items); //+ 1 para a saída
+        map->items = (pItem) malloc(sizeof(item) * map->n_items); //+ 2 para a chave e a saída
     }
     else{
         map->items = NULL;
@@ -192,8 +192,8 @@ int PopulateMap(char* filename, pGame_map map){
     if(!(map_file = fopen(filename, "r"))){
         return 0;
     }
-    int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_hazards = 0;
-    int turf_open_texture, turf_closed_texture, texture_hazard, texture_movables, texture_key, texture_exit;
+    int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_powers = 0, n_patterns = 0, n_movables = 0, n_hazards = 0;
+    int turf_open_texture, turf_closed_texture, texture_hazard, texture_movables, texture_power, texture_key, texture_exit;
     int positions_to_skip = 0; //argumento para fseek, para pular direto ao mapa após a leitura dos outros dados
     char map_buffer[MAP_MAX_X], *substr;
 
@@ -236,7 +236,11 @@ int PopulateMap(char* filename, pGame_map map){
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
 
-    n_keys = n_mobs; //Poderes (chaves)
+    n_powers = n_mobs; //Poderes
+    texture_power = atoi(strtok(map_buffer, ";"));
+
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Chave
+
     texture_key = atoi(strtok(map_buffer, ";"));
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Saida
@@ -245,7 +249,7 @@ int PopulateMap(char* filename, pGame_map map){
 
     positions_to_skip += 2; //Ultimo \n
 
-    SetMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_hazards), n_patterns, n_mobs);
+    SetMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_powers + n_hazards), n_patterns, n_mobs);
     rewind(map_file);
 
     //Le informações dos padrões de movimento das criaturas
@@ -334,20 +338,29 @@ int PopulateMap(char* filename, pGame_map map){
                     I = &map->items[pos];
                     I->id = pos;
                     SetItemPos(I, i, j);
-                    I->type = ITEM_KEY;
-                    I->texture = texture_key;
+                    I->type = ITEM_POWER;
+                    I->texture = texture_power;
                 }
                 else if(map_c == '='){
-                    pos = n_keys + hazards_placed++;
+                    pos = n_powers + hazards_placed++;
                     I = &map->items[pos];
                     I->id = pos;
                     I->texture = texture_hazard;
-                    SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
+                    SetItemPos(I, i, j); //Água vem depois dos Corações no vetor
                     I->type = ITEM_WATER;
                 }
                 else if(map_c == 'B'){
-                    pos = n_keys + n_hazards;
-                    I = &map->items[pos]; //A saída (Baú) sempre é o último item
+                    pos = n_powers + n_hazards;
+                    I = &map->items[pos]; //A chave sempre é o penúltimo item
+                    I->id = pos;
+                    I->texture = texture_key;
+                    I->pos.x = i; //Não está no mapa
+                    I->pos.y = j;
+                    I->type = ITEM_KEY;
+                }
+                else if(map_c == 'D'){
+                    pos = n_powers + n_hazards + 1;
+                    I = &map->items[pos]; //A saída sempre é o último item
                     I->id = pos;
                     I->texture = texture_exit;
                     I->pos.x = i; //Não está no mapa
