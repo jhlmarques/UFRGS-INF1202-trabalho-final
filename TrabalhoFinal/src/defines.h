@@ -65,5 +65,9 @@
 #define BASE_TURF_TEXTURE_FILE "textures/turf.png"
 
 #define TEXTURE_PLAYER 4
+#define TEXTURE_SIZE 32
+#define MAP_DRAW_Y_OFFSET 32
+#define INFO_X_DRAWPOS 0
+#define INFO_Y_DRAWPOS 16
 
 #endif

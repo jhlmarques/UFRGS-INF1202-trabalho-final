@@ -80,6 +80,7 @@ void OnPlayerKilled(){
     }
     else{
         SimpleMove(player_mob, GetTurf(cur_map->player_start_pos));
+        player_mob->health = 1;
     }
 }
 

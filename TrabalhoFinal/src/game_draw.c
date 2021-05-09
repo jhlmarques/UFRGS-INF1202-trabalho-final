@@ -63,49 +63,107 @@ void UnloadGameTextures(){
     free(all_textures);
 }
 
+void DrawMenu(pMenu game_menu){
+    switch(game_menu->state){
+
+        case MAIN_MENU:{
+            DrawText("NEW GAME\nLOAD GAME\nCREDITS\nEXIT\n", 190, 200, 20, BLACK); //Fun��o de Escrita da raylib
+            DrawCircle(170, 180 + (game_menu->selection * 30), 5.0, BLACK);
+            break;
+        }
+        case MENU_NEWGAME:{
+            DrawText(TextFormat("Digite o seu nome (%d/%d)", game_menu->buffer_pos, PLAYER_NAME_LEN - 1), 190, 200, 20, BLACK);
+            DrawText(game_menu->input_buffer, 190, 220, 20, BLACK);
+            break;
+        }
+        case MENU_DELETE_SAVE:{
+            DrawText("Escolha uma gravação para deletar", 190, 100, 20, RED);
+        }
+        case MENU_LOADGAME:{
+            if(saves_loaded < 0){
+                DrawText("Erro ao carregar o arquivo de gravações", 190, 200, 20, BLACK);
+            }
+            else{
+                int i, y_pos = 200;
+                pSave_state save;
+                DrawText("Escolha uma gravação:", 190, 160, 20, BLACK);
+                for(i = 0; i < saves_loaded; i++){
+                    save = all_saves + i;
+                    DrawText(TextFormat("%d - %s: Fase: %d Vidas: %d Pontos: %d", \
+                    save->save_id + 1, save->player_name, save->cur_level, save->lives, save->points),\
+                     190, y_pos, 20, ORANGE);
+                    y_pos += 30;
+                }
+                DrawText("Deletar", 190, y_pos, 20, RED);
+                if(saves_loaded){
+                    DrawCircle(170, 180 + (game_menu->selection * 30), 5.0, BLACK);
+                }
+            }
+
+            break;
+        }
+        case MENU_CREDITS:{
+            DrawText("CREDITOS\n Jose Henrique Lima Marques\n Matheus Almeida Silva", 190, 200, 20, BLUE);
+            break;
+        }
+        case MENU_PAUSED:{
+            DrawText("Voltar ao jogo\nMenu Principal", 190, 180, 20, BLACK);
+            DrawCircle(170, 140 + (game_menu->selection * 30), 5.0, BLACK);
+            break;
+        }
+    }
+
+}
+
 void DrawMob(pMob M){
     if(TEXTURE_EXISTS(M->texture)){
-        DrawTexture(all_textures[M->texture - 1], M->pos.x * 32, M->pos.y * 32, WHITE);
+        DrawTexture(all_textures[M->texture - 1], M->pos.x * TEXTURE_SIZE, (M->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
     else{
-        DrawTexture(base_mob_texture, M->pos.x * 32, M->pos.y * 32, WHITE);
+        DrawTexture(base_mob_texture, M->pos.x * TEXTURE_SIZE, (M->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
 }
 
 void DrawItem(pItem I){
     if(TEXTURE_EXISTS(I->texture)){
-        DrawTexture(all_textures[I->texture - 1], I->pos.x * 32, I->pos.y * 32, WHITE);
+        DrawTexture(all_textures[I->texture - 1], I->pos.x * TEXTURE_SIZE, (I->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
     else{
-        DrawTexture(base_item_texture, I->pos.x * 32, I->pos.y * 32, WHITE);
+        DrawTexture(base_item_texture, I->pos.x * TEXTURE_SIZE, (I->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
 }
 
 void DrawTurf(pTurf T){
     if(TEXTURE_EXISTS(T->texture)){
-        DrawTexture(all_textures[T->texture - 1], T->pos.x * 32, T->pos.y * 32, WHITE);
+        DrawTexture(all_textures[T->texture - 1], T->pos.x * TEXTURE_SIZE, (T->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
     else{
-        DrawTexture(base_turf_texture, T->pos.x * 32, T->pos.y * 32, WHITE);
+        DrawTexture(base_turf_texture, T->pos.x * TEXTURE_SIZE, (T->pos.y * TEXTURE_SIZE) + MAP_DRAW_Y_OFFSET, WHITE);
     }
+}
+
+void DrawInfo(){
+    DrawText(TextFormat("VIDA: %d ", cur_save->lives), INFO_X_DRAWPOS, INFO_Y_DRAWPOS, 18, BLACK);
+    DrawText(TextFormat("PONTOS: %d ", cur_map->points), INFO_X_DRAWPOS + (4*TEXTURE_SIZE), INFO_Y_DRAWPOS, 18, BLACK);
+    DrawText(TextFormat("PODER: %d ", player_mob->powered), INFO_X_DRAWPOS + (8*TEXTURE_SIZE), INFO_Y_DRAWPOS, 18, BLACK);
+    DrawText(TextFormat("NIVEL: %d ", cur_save->cur_level + 1), INFO_X_DRAWPOS + (12*TEXTURE_SIZE), INFO_Y_DRAWPOS, 18, BLACK);
 }
 
 void DrawGame(){
     int i, j;
     pTurf T;
 
+    DrawInfo();
+
     for(i = 0; i < cur_map->bounds_y; i++){
         for(j = 0; j < cur_map->bounds_x; j++){
             T = &pMAP_ACESS_TURF(cur_map, j, i);
             //Ordem de desenho: Turf -> Item -> Mob
-            //printf("DRAWING TURF (%d,%d)\n", j, i);
             DrawTurf(T);
             if(pTURF_HAS_ITEM(T)){
-                //printf("DRAWING ITEM [%d]\n", T->cur_item);
                 DrawItem(GetItem(T->cur_item));
             }
             if(pTURF_HAS_MOB(T)){
-                //printf("DRAWING MOB [%d]\n", T->cur_mob);
                 DrawMob(GetMob(T->cur_mob));
             }
         }

@@ -191,7 +191,7 @@ int LoadMobTypes(char* filename){
 
 int LoadMap(char* filename, pGame_map map){
     FILE* map_file;
-    if(!(map_file = fopen(filename, "r+"))){
+    if(!(map_file = fopen(filename, "r"))){
         return 0;
     }
     int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_hazards = 0;
@@ -202,7 +202,6 @@ int LoadMap(char* filename, pGame_map map){
     //Carrega informacoes para gerar o mapa basico
     while(fgets(map_buffer, MAP_MAX_X, map_file)){
         positions_to_skip += strlen(map_buffer) + 1; //Embora \n é capturado, strlen conta como 1 caractere, quando de fato é 2
-        printf("TO SKIP: %d\n", positions_to_skip);
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
@@ -221,42 +220,35 @@ int LoadMap(char* filename, pGame_map map){
     printf("MAP MOBS: %d\n", n_mobs);
     //Outros dados do mapa
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Limites do mapa
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     bounds_x = atoi(strtok(map_buffer, ";"));
     bounds_y = atoi(strtok(NULL, ";"));
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     turf_open_texture = atoi(strtok(map_buffer, ";")); //Textura das turfs abertas
     turf_closed_texture = atoi(strtok(NULL, ";")); //Textura das turfs fechadas
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     n_movables = atoi(strtok(map_buffer, ";")); //Blocos móveis
     texture_movables = atoi(strtok(NULL, ";"));
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     n_hazards = atoi(strtok(map_buffer, ";")); //Abismos/agua/etc
     texture_hazard = atoi(strtok(NULL, ";"));
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     n_keys = n_mobs; //Poderes (chaves)
     texture_key = atoi(strtok(map_buffer, ";"));
 
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Saida
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     texture_exit = atoi(strtok(map_buffer, ";"));
 
     positions_to_skip += 2; //Ultimo \n
-    printf("TO SKIP: %d\n", positions_to_skip);
 
     MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_hazards), n_patterns, n_mobs);
     rewind(map_file);
