@@ -59,7 +59,7 @@ void NewSaveState(pSave_state save, char* p_name, int id){
     save->points = 0;
 }
 
-void DeleteSave(char* savefile_name, int pos){
+void DeleteSaveFromFile(char* savefile_name, int pos){
     FILE* savefile;
     if(!(savefile = fopen(savefile_name, "wb"))){
         return;
@@ -72,7 +72,7 @@ void DeleteSave(char* savefile_name, int pos){
     }
     for(i = pos + 1; i < MAX_SAVES; i++){
         temp[i - 1] = all_saves[i];
-        temp[i - 1].save_id = i;
+        temp[i - 1].save_id = i - 1;
     }
     fwrite(temp, sizeof(save_state), saves_loaded - 1, savefile);
     fclose(savefile);

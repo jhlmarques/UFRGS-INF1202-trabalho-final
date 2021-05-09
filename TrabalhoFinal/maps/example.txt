@@ -1,9 +1,18 @@
 (A-Z): IntervaloDeMovimento;passos1;dir1;passos2;dir2; ... ;passosn;dirn (MAXIMO DEFINIDO EM DEFINES.H)
 
-simbolo(a-z):Tipo;Movimento (TIPOS ENCONTRADS EM MOB_DEFINITIONS.TXT)
+simbolo(a-z):Tipo;NumeroDoPadraoDeMovimento (TIPOS ENCONTRADS EM MOB_DEFINITIONS.TXT)
 
-LarguraDoMapa;AlturaDoMapa;TexturaTurfAberta;TexturaTurfFechada;BlocosMoveis;Aguas
+LarguraDoMapa;AlturaDoMapa
+TexturaTurfAberta;TexturaTurfFechada
+BlocosMoveis;TexturaBlocoMovel
+Aguas;TexturaAgua
+TexturaPoder
+TexturaSaída
 
+Mapa
+
+
+Exemplo de mapa 10x10:
 ##########
 #..*....B#
 #..==....#
@@ -15,14 +24,14 @@ LarguraDoMapa;AlturaDoMapa;TexturaTurfAberta;TexturaTurfFechada;BlocosMoveis;Agu
 #...P....#
 ##########
 
-Exemplo de mapa 8x8
 Legenda:
+# = Territorio solido
+# = Territorio livre
 a,b,c = Criaturas
 B = Saida
 P = Jogador
 @ = Bloco movel
 = = Agua
-* = Chave
+* = Poder
 
-É essencial que todos valores estejam escritos corretamente
-
+A ordem em que os mapas aparecem no jogo é definida em maplist.txt

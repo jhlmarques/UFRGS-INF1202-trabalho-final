@@ -18,7 +18,6 @@ void LoadGameTextures(char* textures_file_name){
         puts("ERRO AO ABRIR ARQUIVO DE TEXTURAS");
         return;
     }
-    puts("CARREGANDO TEXTURAS");
 
     //Texturas basicas, para criaturas/itens/territorios com textura inexistente
     base_mob_texture = LoadTexture(BASE_MOB_TEXTURE_FILE);
@@ -26,9 +25,13 @@ void LoadGameTextures(char* textures_file_name){
     base_turf_texture = LoadTexture(BASE_TURF_TEXTURE_FILE);
     char buffer[100];
     int i = 0, len;
-    //Primeira linha do arquivo é a quantidade de texturas no arquivo
-    texture_amount = atoi(fgets(buffer, 3, textures_file));
-    printf("TEXTURAS: %d\n", texture_amount);
+
+    texture_amount = 0;
+    //Lê quantidade de linhas
+    while(fgets(buffer, 100, textures_file) != NULL){
+        texture_amount++;
+    }
+    rewind(textures_file);
     if(!texture_amount){
         return;
     }
@@ -37,7 +40,7 @@ void LoadGameTextures(char* textures_file_name){
 
     while(fgets(buffer, 100, textures_file) != NULL){
         len = strlen(buffer);
-        if(buffer[len-1] == '\n'){
+        if(buffer[len-1] == '\n'){ //Arruma o nome do arquivo caso fgets capturou \n
             buffer[len-1] = '\0';
         }
 
@@ -46,7 +49,6 @@ void LoadGameTextures(char* textures_file_name){
             break;
         }
     }
-    puts("TEXTURAS CARREGADAS!");
 
     fclose(textures_file);
 }
@@ -67,7 +69,7 @@ void DrawMenu(pMenu game_menu){
     switch(game_menu->state){
 
         case MAIN_MENU:{
-            DrawText("NEW GAME\nLOAD GAME\nCREDITS\nEXIT\n", 190, 200, 20, BLACK); //Fun��o de Escrita da raylib
+            DrawText("NEW GAME\nLOAD GAME\nCREDITS\nEXIT\n", 190, 200, 20, BLACK); 
             DrawCircle(170, 180 + (game_menu->selection * 30), 5.0, BLACK);
             break;
         }

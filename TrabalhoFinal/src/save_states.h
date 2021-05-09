@@ -12,14 +12,19 @@ typedef struct save_state{
 
 }save_state, *pSave_state;
 
+//Retorna a quantidade de gravações encontradas em um arquivo de gravações
 int Savefile_SavesAmnt(char* savefile_name);
 
+//Carrega um vetor de gravações de um arquivo de gravações
 int LoadSaveFile(char* savefile_name, pSave_state saves_v);
 
+//Guarda uma gravação numa determinada posição dum arquivo de gravações
 int WriteSaveToFile(char* savefile_name, pSave_state save_to_write, int pos);
 
+//Define uma gravação como uma vazia
 void NewSaveState(pSave_state save, char* p_name, int id);
 
-void DeleteSave(char* savefile_name, int pos);
+//Deleta uma gravação dum arquivo de gravações
+void DeleteSaveFromFile(char* savefile_name, int pos);
 
 #endif

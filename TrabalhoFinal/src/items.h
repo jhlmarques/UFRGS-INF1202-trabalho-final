@@ -12,10 +12,13 @@ typedef struct item{
 
 }item, *pItem;
 
+//Acessa o mapa atual e retorna o item de id igual ao fornecido
 pItem GetItem(int item_id);
 
+//Lógica pós contato do jogador com item
 void ItemTouched(int item_id);
 
+//Põe item na posição x,y do mapa atual
 void SetItemPos(pItem I, int x, int y);
 
 #endif

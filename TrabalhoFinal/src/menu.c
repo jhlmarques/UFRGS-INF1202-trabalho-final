@@ -68,6 +68,7 @@ void MenuOnSelect(pMenu game_menu){
                 }
                 else{
                     game_menu->state = MENU_DELETE_SAVE;
+                    saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
                 }
                 break;
                 case 2:
@@ -102,7 +103,7 @@ void MenuOnSelect(pMenu game_menu){
             }
             break;
         case MENU_DELETE_SAVE:
-            DeleteSave(SAVEFILE_NAME, game_menu->selected);
+            DeleteSaveFromFile(SAVEFILE_NAME, game_menu->selected);
             saves_loaded--;
             MenuStepBack(game_menu);
             break;

@@ -12,7 +12,7 @@ void ItemTouched(int item_id){
     pItem I = GetItem(item_id);
     switch(I->type){
         case ITEM_KEY:
-        OnPlayerCollectKey();
+        OnPlayerCollectPower();
         GetTurf(I->pos)->cur_item = NO_ID;//Sai do mapa
         break;
         case ITEM_WATER:
