@@ -2,7 +2,7 @@
 
 simbolo(a-z):Tipo;Movimento (TIPOS ENCONTRADS EM MOB_DEFINITIONS.TXT)
 
-LarguraDoMapa;AlturaDoMapa;BlocosMoveis;Aguas
+LarguraDoMapa;AlturaDoMapa;TexturaTurfAberta;TexturaTurfFechada;BlocosMoveis;Aguas
 
 ##########
 #..*....B#

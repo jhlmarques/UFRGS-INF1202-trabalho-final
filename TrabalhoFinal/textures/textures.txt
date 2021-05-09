@@ -1,0 +1,9 @@
+8
+textures/parede.png
+textures/chao.png
+textures/inimigo.png
+textures/player.png
+textures/ball.png
+textures/poder.png
+textures/agua.png
+textures/porta.png

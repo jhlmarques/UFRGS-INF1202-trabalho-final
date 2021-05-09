@@ -16,6 +16,7 @@ typedef struct turf{
     int cur_mob; //Criatura atual (id)
     int cur_item; //Item atual (id)
     int faction; //Se n�o neutro, somente criaturas da mesma fac��o (ou neutras) podem passar
+    int texture; 
     Vector2 pos;
 
 }turf, *pTurf;

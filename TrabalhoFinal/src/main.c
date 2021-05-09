@@ -8,11 +8,21 @@
 #include "map.h"
 #include "save_states.h"
 #include "game.h"
+#include "game_draw.h"
+
+//Se definido, o jogo mostra os graficos no prompt de comando em forma de caracteres
+//#define CMD_GRAPHICS
 
 /*
 VARIÁVEIS GLOBAIS
 */
 
+//TEXTURAS
+Texture2D* all_textures; //Vetor de texturas (Raylib)
+int texture_amount; //Quantidade de texturas carregadas
+Texture2D base_mob_texture; //Texturas básicas, na ausência de texturas
+Texture2D base_item_texture;
+Texture2D base_turf_texture;
 //MAPA
 pGame_map cur_map; //Mapa atual
 int maps_loaded;//Quantidade de mapas carregados
@@ -33,7 +43,7 @@ int main(void) {
     const int screenHeight = SCREENHEIGHT;
     int menu_oldstate;
     menu game_menu;
-    
+
     //Carregamento de structs essenciais
     SetBasicMenu(&game_menu);
     saves_loaded = LoadSaveFile(SAVEFILE_NAME, all_saves);
@@ -42,11 +52,12 @@ int main(void) {
 
     //Definições gráficas
     InitWindow(screenWidth, screenHeight, WINDOW_NAME);
+    LoadGameTextures(TEXTURES_FILE);
 
     SetTargetFPS(60);
     SetExitKey(0);
 
-    //LOOP PRINCIPAL  
+    //LOOP PRINCIPAL
     while (!WindowShouldClose()){
         if(game_state == STATE_MENU){ //LÓGICA DO MENU
             menu_oldstate = game_menu.state;
@@ -68,14 +79,17 @@ int main(void) {
         }
         else if(game_state == STATE_LOADING_MAP){//LÓGICA PRÉ-JOGO
             //Grava progresso
+            puts("CARREGANDO MAPA");
             if(!LoadCurMapFromMapList(MAPLIST_NAME, cur_save->cur_level)){
                 cur_save->cur_level = 0;
                 game_state = STATE_STOPPED_PLAYING;
+                puts("NAO HA MAIS MAPAS RESTANTES");
             }
             else{
                 player_mob = &cur_map->mobs[0]; //Primeira criatura sempre é o jogador
                 game_state = STATE_PLAYING;
             }
+            puts("SALVANDO PROGRESSO...");
             WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
         }
         else if(game_state == STATE_STOPPED_PLAYING){//LÓGICA PÓS-JOGO - PRÉ-MENU
@@ -104,13 +118,17 @@ int main(void) {
 
         //FUNÇÕES GRÁFICAS
         BeginDrawing();
-            ClearBackground(RAYWHITE);
+            ClearBackground(WHITE);
             switch(game_state){
                 case STATE_PLAYING:
-                system("cls"); //Placeholder
-                printf("MAPA: %d VIDAS: %d PONTOS: %d INIMIGOS: %d\n", cur_save->cur_level, cur_save->lives, \
-                                                                        (cur_save->points + cur_map->points), cur_map->enemies_left);
-                PrintMap_ASCII(cur_map);
+                    #ifdef CMD_GRAPHICS
+                        system("cls"); //Placeholder
+                        printf("MAPA: %d VIDAS: %d PONTOS: %d INIMIGOS: %d\n", cur_save->cur_level, cur_save->lives, \
+                                                                                (cur_save->points + cur_map->points), cur_map->enemies_left);
+                        PrintMap_ASCII(cur_map);
+                    #else
+                        DrawGame();
+                    #endif
                 break;
                 case STATE_MENU:
                 DrawMenu(&game_menu);
@@ -124,6 +142,8 @@ int main(void) {
     //LIMPEZA PRÉ-ENCERRAMENTO DO JOGO
     CloseWindow();
 
+    UnloadGameTextures();
+
     player_mob = NULL;
 
     if(cur_map != NULL){
@@ -131,7 +151,6 @@ int main(void) {
         free(cur_map);
     }
     free(mob_types);
-
 
 
     return 0;

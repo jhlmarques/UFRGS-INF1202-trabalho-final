@@ -167,7 +167,7 @@ int LoadMobTypes(char* filename){
     if(mob_type_amount){
         mob_types = (pMob) malloc(sizeof(mob) * mob_type_amount);
         pMob M;
-        //Lê os mobs: Vida; Icone; Facção;
+        //Lê os mobs: Vida; Textura; Facção;
         for(i = 0; i < mob_type_amount; i++){
             M = &mob_types[i];
 
@@ -177,11 +177,12 @@ int LoadMobTypes(char* filename){
 
             fseek(mob_file, 2, SEEK_CUR);
             fgets(amnt_buffer, 3, mob_file);
-            M->icon = atoi(amnt_buffer);
+            M->texture = atoi(amnt_buffer);
 
             fseek(mob_file, 2, SEEK_CUR);
             fgets(amnt_buffer, 3, mob_file);
             M->faction = atoi(amnt_buffer);
+            printf("Criatura carregada: H=%d I=%d F=%d\n", M->health, M->texture, M->faction);
         }
     }
     fclose(mob_file);
@@ -190,37 +191,74 @@ int LoadMobTypes(char* filename){
 
 int LoadMap(char* filename, pGame_map map){
     FILE* map_file;
-    if(!(map_file = fopen(filename, "r"))){
+    if(!(map_file = fopen(filename, "r+"))){
         return 0;
     }
-    int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_water = 0;
+    int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_hazards = 0;
+    int turf_open_texture, turf_closed_texture, texture_hazard, texture_movables, texture_key, texture_exit;
+    int positions_to_skip = 0;
     char map_buffer[MAP_MAX_X], *substr;
 
     //Carrega informacoes para gerar o mapa basico
     while(fgets(map_buffer, MAP_MAX_X, map_file)){
+        positions_to_skip += strlen(map_buffer) + 1; //Embora \n é capturado, strlen conta como 1 caractere, quando de fato é 2
+        printf("TO SKIP: %d\n", positions_to_skip);
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
         n_patterns++;
     }
-    fseek(map_file, 1, SEEK_CUR); //Pula \n
+    printf("MAP MOVEMENT PATTERNS: %d\n", n_patterns);
 
     while(fgets(map_buffer, MAP_MAX_X, map_file)){
+        positions_to_skip += strlen(map_buffer) + 1; 
+        printf("TO SKIP: %d\n", positions_to_skip);
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
         n_mobs++;
     }
-
-    fgets(map_buffer, MAP_MAX_X, map_file);
+    printf("MAP MOBS: %d\n", n_mobs);
+    //Outros dados do mapa
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Limites do mapa
+    printf("TO SKIP: %d\n", positions_to_skip);
 
     bounds_x = atoi(strtok(map_buffer, ";"));
     bounds_y = atoi(strtok(NULL, ";"));
-    n_keys = n_mobs;
-    n_movables = atoi(strtok(NULL, ";")); //Blocos móveis
-    n_water = atoi(strtok(NULL, ";")); //Água
 
-    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_water), n_patterns, n_mobs);
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    turf_open_texture = atoi(strtok(map_buffer, ";")); //Textura das turfs abertas
+    turf_closed_texture = atoi(strtok(NULL, ";")); //Textura das turfs fechadas
+
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    n_movables = atoi(strtok(map_buffer, ";")); //Blocos móveis
+    texture_movables = atoi(strtok(NULL, ";"));
+
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    n_hazards = atoi(strtok(map_buffer, ";")); //Abismos/agua/etc
+    texture_hazard = atoi(strtok(NULL, ";"));
+
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1;
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    n_keys = n_mobs; //Poderes (chaves)
+    texture_key = atoi(strtok(map_buffer, ";"));
+
+    positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Saida
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    texture_exit = atoi(strtok(map_buffer, ";"));
+
+    positions_to_skip += 2; //Ultimo \n
+    printf("TO SKIP: %d\n", positions_to_skip);
+
+    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_hazards), n_patterns, n_mobs);
     rewind(map_file);
 
     //Le informações dos padrões de movimento das criaturas
@@ -233,12 +271,15 @@ int LoadMap(char* filename, pGame_map map){
         MM = &map->movement_patterns[i];
         MM->movement_interval = atoi(strtok(map_buffer + 2, ";")); //Intervalo de movimento
         j = 0;
+        printf("PATTERN [%d]:", i);
         while((substr = strtok(NULL, ";")) != NULL){
             MC = &MM->commands[j];
             MC->amount = atoi(substr);
             MC->dir = StrToDir(strtok(NULL, ";"));
+            printf(" [%d : %d]", MC->amount, MC->dir);
             j++;
         }
+        printf("\n");
         MM->command_amnt = j;
         i++;
     }
@@ -252,7 +293,7 @@ int LoadMap(char* filename, pGame_map map){
 
         M = &map->mobs[i];
         MT = &mob_types[atoi(strtok(map_buffer + 2, ";"))]; //Copia os dados do tipo
-        SetBasicMob(M, MT->health, MT->icon, MT->faction);
+        SetBasicMob(M, MT->health, MT->texture, MT->faction);
         substr = strtok(NULL, ";");
         if(*substr != '\n'){
             M->movement_pattern = atoi(substr); //Guarda o numero do padrao de movimento no vetor do mapa
@@ -260,23 +301,27 @@ int LoadMap(char* filename, pGame_map map){
         else{
             M->movement_pattern = -1;
         }
+        printf("MOB [%d]: H:%d T:%d F:%d P:%d\n", i, M->health, M->texture, M->faction, M->movement_pattern);
         i++;
     }
-    fgets(map_buffer, MAP_MAX_X, map_file); //Pula dados do mapa
-    fseek(map_file, 2, SEEK_CUR);//Pula \n
+
+    fseek(map_file, positions_to_skip, SEEK_SET); //Pula dados do mapa irrelevantes
+
     //Popula o mapa
     pTurf T;
     pItem I;
     char map_c;
-    int keys_placed = 0, movables_placed = 0, water_placed = 0, pos;
+    int keys_placed = 0, movables_placed = 0, hazards_placed = 0, pos;
     for(j = 0; j < bounds_y ; j++){
         for(i = 0; i < bounds_x; i++){
             T = &pMAP_ACESS_TURF(map, i, j);
             map_c = fgetc(map_file);
             if(i == 0 || j == 0 || i == (bounds_x - 1) || j == (bounds_y - 1)){
                 T->solid = 1;
+                T->texture = turf_closed_texture;
             }
             else{
+                T->texture = turf_open_texture;
                 if(map_c == '.'){
                     continue;
                 }
@@ -291,14 +336,14 @@ int LoadMap(char* filename, pGame_map map){
                     M = &map->mobs[pos];
                     M->id = pos;
                     SetMobPos(M, i, j); //Blocos moveis sao as ultimas criaturas do vetor sempre
-                    SetBasicMob(M, 1, 0, NEUTRAL);
+                    SetBasicMob(M, 1, texture_movables, NEUTRAL);
                     M->movement_pattern = -1;
                 }
                 else if(map_c == 'P'){
                     M = &map->mobs[0]; //Jogador sempre é a primeira criatura
                     M->id = PLAYER_ID;
                     SetMobPos(M, i, j);
-                    SetBasicMob(M, 1, 0, FRIENDLY);
+                    SetBasicMob(M, 1, TEXTURE_PLAYER, FRIENDLY);
                     map->player_start_pos = M->pos;
                 }
                 else if(map_c == '*'){
@@ -307,18 +352,21 @@ int LoadMap(char* filename, pGame_map map){
                     I->id = pos;
                     SetItemPos(I, i, j);
                     I->type = ITEM_KEY;
+                    I->texture = texture_key;
                 }
                 else if(map_c == '='){
-                    pos = n_keys + water_placed++;
+                    pos = n_keys + hazards_placed++;
                     I = &map->items[pos];
                     I->id = pos;
+                    I->texture = texture_hazard;
                     SetItemPos(I, i, j); //Água vem depois das Chaves (Corações) no vetor
                     I->type = ITEM_WATER;
                 }
                 else if(map_c == 'B'){
-                    pos = n_keys + n_water;
+                    pos = n_keys + n_hazards;
                     I = &map->items[pos]; //A saída (Baú) sempre é o último item
                     I->id = pos;
+                    I->texture = texture_exit;
                     I->pos.x = i; //Não está no mapa
                     I->pos.y = j;
                     I->type = ITEM_EXIT;

@@ -37,7 +37,7 @@ void PlayerInput(){
             return;
         }
         if(MoveCheckInteractions(player_mob)){
-            player_mob->action_cooldown = 2;
+            player_mob->action_cooldown = 10;
         }
     }
 }
