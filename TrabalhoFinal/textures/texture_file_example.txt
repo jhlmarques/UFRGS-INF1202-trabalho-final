@@ -1,0 +1,6 @@
+NumeroDeTexturas
+CaminhoParaTextura[0]
+CaminhoParaTextura[1]
+CaminhoParaTextura[2]
+...
+CaminhoParaTextura[NumeroDeTexturas - 1]

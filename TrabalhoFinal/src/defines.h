@@ -59,6 +59,15 @@
 #define ITEM_WATER 2
 #define ITEM_EXIT 3
 
+#define TEXTURES_FILE "textures/textures.txt"
+#define BASE_MOB_TEXTURE_FILE "textures/mob.png"
+#define BASE_ITEM_TEXTURE_FILE "textures/item.png"
+#define BASE_TURF_TEXTURE_FILE "textures/turf.png"
 
+#define TEXTURE_PLAYER 4
+#define TEXTURE_SIZE 32
+#define MAP_DRAW_Y_OFFSET 32
+#define INFO_X_DRAWPOS 0
+#define INFO_Y_DRAWPOS 16
 
 #endif

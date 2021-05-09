@@ -17,7 +17,7 @@ typedef struct mob{
     int movement_counter; //Incrementado a cada movimento, resetado por outras funções 
     int action_cooldown;//Frames ate a proxima ação
     Vector2 pos; //Posi��o atual.
-    int icon; //Imagem atual
+    int texture; //Imagem atual
     int faction; //Amigo, inimigo, neutro
     int id; //Identificador �nico
 }mob, *pMob;
@@ -43,6 +43,6 @@ int MoveCheckInteractions(pMob moved);
 
 void SetMobPos(pMob M, int x, int y);
 
-void SetBasicMob(pMob M, int health, int icon, int faction);
+void SetBasicMob(pMob M, int health, int texture, int faction);
 
 #endif

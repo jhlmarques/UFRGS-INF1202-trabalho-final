@@ -25,6 +25,4 @@ void SetMenuMaxSelect(pMenu game_menu);
 
 void MenuCharInput(pMenu game_menu);
 
-void DrawMenu(pMenu game_menu);
-
 #endif // MENU_H_INCLUDED

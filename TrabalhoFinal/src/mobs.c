@@ -122,11 +122,12 @@ void SetMobPos(pMob M, int x, int y){
     T->cur_mob = M->id;
 }
 
-void SetBasicMob(pMob M, int health, int icon, int faction){
+void SetBasicMob(pMob M, int health, int texture, int faction){
     M->health = health;
-    M->icon = icon;
+    M->texture = texture;
     M->faction = faction;
     M->powered = 0;
     M->action_cooldown = 0;
     M->cur_movement_command = 0;
+    M->movement_counter = 0;
 }

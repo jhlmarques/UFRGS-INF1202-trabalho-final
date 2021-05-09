@@ -7,6 +7,7 @@
 typedef struct item{
     Vector2 pos; //Posição
     int type; //Tipo de item
+    int texture; //Textura
     int id; //Identificador
 
 }item, *pItem;

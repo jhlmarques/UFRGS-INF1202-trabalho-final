@@ -37,7 +37,7 @@ void PlayerInput(){
             return;
         }
         if(MoveCheckInteractions(player_mob)){
-            player_mob->action_cooldown = 2;
+            player_mob->action_cooldown = 10;
         }
     }
 }
@@ -80,6 +80,7 @@ void OnPlayerKilled(){
     }
     else{
         SimpleMove(player_mob, GetTurf(cur_map->player_start_pos));
+        player_mob->health = 1;
     }
 }
 
