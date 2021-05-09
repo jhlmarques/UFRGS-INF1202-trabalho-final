@@ -5,11 +5,11 @@
 #include "defines.h"
 
 typedef struct movement_command{ //Estrutura guardando uma direção e uma quantidade de passos
-    int dir;
-    int amount;
+    int dir; //Direção a se mover
+    int amount; //Quantos passos nessa direção
 }movement_command, *pMovement_command;
 
-typedef struct mob_movement{
+typedef struct mob_movement{ //Define uma sequência de movimentos a serem executados em loop infinito
     int movement_interval; //Quantos movimentos do jogador at� essa criatura se mover
     int command_amnt; //Quantidade de comandos
     movement_command commands[MAX_MOVEMENT_COMMANDS];//Comandos

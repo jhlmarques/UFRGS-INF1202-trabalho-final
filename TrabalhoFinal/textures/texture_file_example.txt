@@ -1,6 +1,7 @@
-NumeroDeTexturas
-CaminhoParaTextura[0]
-CaminhoParaTextura[1]
-CaminhoParaTextura[2]
+CaminhoParaTextura1
+CaminhoParaTextura2
+CaminhoParaTextura3
 ...
-CaminhoParaTextura[NumeroDeTexturas - 1]
+CaminhoParaTexturaN
+
+Ao definir uma textura, usar o número da linha

@@ -117,14 +117,14 @@ void MapCreateTurfs(pGame_map map){
 
 }
 
-void MapCreateMovementPatterns(pGame_map map, int amount){
+void MapCreateMovementPatternV(pGame_map map, int amount){
     map->n_mpatterns = amount;
     if(amount > 0){
         map->movement_patterns = (pMob_movement) malloc(sizeof(mob_movement) * amount);
     }
 }
 
-void MapFreeMap(pGame_map map){
+void MapFreeElements(pGame_map map){
     free(map->turfs);
     map->turfs = NULL;
     free(map->items);
@@ -135,16 +135,15 @@ void MapFreeMap(pGame_map map){
     map->movement_patterns = NULL;
 }
 
-void MapCreateMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies){
+void SetMap(pGame_map map, int bx, int by, int nm, int ni, int np, int nenemies){
     map->bounds_x = bx;
     map->bounds_y = by;
     MapCreateMobV(map, nm);
-    MapCreateMovementPatterns(map, np);
+    MapCreateMovementPatternV(map, np);
     MapCreateItemV(map, ni);
     MapCreateTurfs(map);
     map->enemies_left = nenemies;
     map->points = 0;
-
 }
 
 int LoadMobTypes(char* filename){
@@ -182,21 +181,20 @@ int LoadMobTypes(char* filename){
             fseek(mob_file, 2, SEEK_CUR);
             fgets(amnt_buffer, 3, mob_file);
             M->faction = atoi(amnt_buffer);
-            printf("Criatura carregada: H=%d I=%d F=%d\n", M->health, M->texture, M->faction);
         }
     }
     fclose(mob_file);
     return 1;
 }
 
-int LoadMap(char* filename, pGame_map map){
+int PopulateMap(char* filename, pGame_map map){
     FILE* map_file;
     if(!(map_file = fopen(filename, "r"))){
         return 0;
     }
     int i = 0, j, bounds_x, bounds_y, n_mobs = 0, n_keys = 0, n_patterns = 0, n_movables = 0, n_hazards = 0;
     int turf_open_texture, turf_closed_texture, texture_hazard, texture_movables, texture_key, texture_exit;
-    int positions_to_skip = 0;
+    int positions_to_skip = 0; //argumento para fseek, para pular direto ao mapa após a leitura dos outros dados
     char map_buffer[MAP_MAX_X], *substr;
 
     //Carrega informacoes para gerar o mapa basico
@@ -207,17 +205,14 @@ int LoadMap(char* filename, pGame_map map){
         }
         n_patterns++;
     }
-    printf("MAP MOVEMENT PATTERNS: %d\n", n_patterns);
 
     while(fgets(map_buffer, MAP_MAX_X, map_file)){
         positions_to_skip += strlen(map_buffer) + 1; 
-        printf("TO SKIP: %d\n", positions_to_skip);
         if(map_buffer == NULL || *map_buffer == '\n'){
             break;
         }
         n_mobs++;
     }
-    printf("MAP MOBS: %d\n", n_mobs);
     //Outros dados do mapa
     positions_to_skip += strlen(fgets(map_buffer, MAP_MAX_X, map_file)) + 1; //Limites do mapa
 
@@ -250,7 +245,7 @@ int LoadMap(char* filename, pGame_map map){
 
     positions_to_skip += 2; //Ultimo \n
 
-    MapCreateMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_hazards), n_patterns, n_mobs);
+    SetMap(map, bounds_x, bounds_y, (n_mobs + n_movables), (n_keys + n_hazards), n_patterns, n_mobs);
     rewind(map_file);
 
     //Le informações dos padrões de movimento das criaturas
@@ -263,15 +258,12 @@ int LoadMap(char* filename, pGame_map map){
         MM = &map->movement_patterns[i];
         MM->movement_interval = atoi(strtok(map_buffer + 2, ";")); //Intervalo de movimento
         j = 0;
-        printf("PATTERN [%d]:", i);
         while((substr = strtok(NULL, ";")) != NULL){
             MC = &MM->commands[j];
             MC->amount = atoi(substr);
             MC->dir = StrToDir(strtok(NULL, ";"));
-            printf(" [%d : %d]", MC->amount, MC->dir);
             j++;
         }
-        printf("\n");
         MM->command_amnt = j;
         i++;
     }
@@ -293,7 +285,6 @@ int LoadMap(char* filename, pGame_map map){
         else{
             M->movement_pattern = -1;
         }
-        printf("MOB [%d]: H:%d T:%d F:%d P:%d\n", i, M->health, M->texture, M->faction, M->movement_pattern);
         i++;
     }
 
@@ -318,7 +309,7 @@ int LoadMap(char* filename, pGame_map map){
                     continue;
                 }
                 if(map_c >= 'a' && map_c <= 'z'){
-                    pos = CHAR2MOB_I(map_c);
+                    pos = CHAR2MOB_I(map_c); //Criaturas comuns ja sao definidas basicamente na etapa anterior
                     M = &map->mobs[pos];
                     M->id = pos;
                     SetMobPos(M, i, j);
@@ -371,7 +362,7 @@ int LoadMap(char* filename, pGame_map map){
     return 1;
 }
 
-int LoadCurMapFromMapList(char* map_list_file, int index){
+int PopulateCurMapFromMapList(char* map_list_file, int index){
     FILE* map_list;
     if(!(map_list = fopen(map_list_file, "r"))){
         return 0;
@@ -384,7 +375,7 @@ int LoadCurMapFromMapList(char* map_list_file, int index){
             if(filename_buffer[len - 1] == '\n'){//fgets pode pegar \n se não é o fim do arquivo
                 filename_buffer[len - 1] = '\0'; //Encurta a string
             }
-            LoadMap(filename_buffer, cur_map);
+            PopulateMap(filename_buffer, cur_map);
             fclose(map_list);
             return 1;
         }

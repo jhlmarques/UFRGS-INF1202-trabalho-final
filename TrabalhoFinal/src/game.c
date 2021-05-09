@@ -9,13 +9,12 @@ int CheckPaused(){
 
 void GameLoop(){
     if(game_state == STATE_PLAYING){
-        PlayerInput();
+        PlayerMovementInput();
         MobAction();
-
     }
 }
 
-void PlayerInput(){
+void PlayerMovementInput(){
     //Movimento
     if(player_mob->action_cooldown > 0){
         player_mob->action_cooldown--;
@@ -77,10 +76,20 @@ void MobAction(){
 void OnPlayerKilled(){
     if(--cur_save->lives == 0){
         game_state = STATE_STOPPED_PLAYING;
+        cur_map->points = 0;
     }
     else{
         SimpleMove(player_mob, GetTurf(cur_map->player_start_pos));
         player_mob->health = 1;
+        cur_map->points = 0; //Zera pontos
+    }
+}
+
+void AddPoints(int amount){
+    cur_map->points += amount;
+    if(cur_map->points % 10 == 0){
+        cur_save->lives++;
+        WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
     }
 }
 
@@ -90,16 +99,16 @@ void OnMobKilled(pMob killed){
             pItem I = GetItem(cur_map->n_items - 1); //Ultimo item sempre é a saída
             SetItemPos(I, I->pos.x, I->pos.y);
         }
-        cur_map->points += POINT_REWARD_ENEMY_DEFEATED;
+        AddPoints(POINT_REWARD_ENEMY_DEFEATED);
     }
 }
 
-void OnPlayerCollectKey(){
+void OnPlayerCollectPower(){
     player_mob->powered++; //Ganha poder;
 }
 
 void OnLevelEnd(){
     cur_save->cur_level++;
-    cur_save->points += cur_map->points;
+    cur_save->points = cur_map->points;
     game_state = STATE_LOADING_MAP;
 }

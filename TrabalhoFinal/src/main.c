@@ -80,13 +80,14 @@ int main(void) {
         else if(game_state == STATE_LOADING_MAP){//LÓGICA PRÉ-JOGO
             //Grava progresso
             puts("CARREGANDO MAPA");
-            if(!LoadCurMapFromMapList(MAPLIST_NAME, cur_save->cur_level)){
+            if(!PopulateCurMapFromMapList(MAPLIST_NAME, cur_save->cur_level)){
                 cur_save->cur_level = 0;
                 game_state = STATE_STOPPED_PLAYING;
                 puts("NAO HA MAIS MAPAS RESTANTES");
             }
             else{
                 player_mob = &cur_map->mobs[0]; //Primeira criatura sempre é o jogador
+                cur_map->points = cur_save->points; //Carrega pontos da gravação para o mapa
                 game_state = STATE_PLAYING;
             }
             puts("SALVANDO PROGRESSO...");
@@ -94,7 +95,7 @@ int main(void) {
         }
         else if(game_state == STATE_STOPPED_PLAYING){//LÓGICA PÓS-JOGO - PRÉ-MENU
             player_mob = NULL;
-            MapFreeMap(cur_map);
+            MapFreeElements(cur_map);
             //Grava progresso
             WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
             //Volta ao menu
@@ -147,7 +148,7 @@ int main(void) {
     player_mob = NULL;
 
     if(cur_map != NULL){
-        MapFreeMap(cur_map);
+        MapFreeElements(cur_map);
         free(cur_map);
     }
     free(mob_types);
