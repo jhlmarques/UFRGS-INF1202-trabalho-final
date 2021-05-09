@@ -6,3 +6,4 @@ textures/ball.png
 textures/poder.png
 textures/agua.png
 textures/porta.png
+textures/chave.png

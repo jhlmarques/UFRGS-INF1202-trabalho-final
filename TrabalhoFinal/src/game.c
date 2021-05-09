@@ -85,6 +85,11 @@ void OnPlayerKilled(){
     }
 }
 
+void OnKeyCollected(){
+    pItem I = GetItem(cur_map->n_items - 1); //Último item sempre é a saída
+    SetItemPos(I, I->pos.x, I->pos.y);    
+}
+
 void AddPoints(int amount){
     cur_map->points += amount;
     if(cur_map->points % 10 == 0){
@@ -96,7 +101,7 @@ void AddPoints(int amount){
 void OnMobKilled(pMob killed){
     if(killed->faction == HOSTILE){
         if(--cur_map->enemies_left == 0){
-            pItem I = GetItem(cur_map->n_items - 1); //Ultimo item sempre é a saída
+            pItem I = GetItem(cur_map->n_items - 2); //Penultimo item sempre é a saída
             SetItemPos(I, I->pos.x, I->pos.y);
         }
         AddPoints(POINT_REWARD_ENEMY_DEFEATED);

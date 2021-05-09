@@ -20,6 +20,9 @@ void OnPlayerKilled();
 //Adiciona pontos
 void AddPoints(int amount);
 
+//Lógica ao coletar a chave
+void OnKeyCollected();
+
 //Lógica pós morte de criatura (excluindo o jogador)
 void OnMobKilled(pMob killed);
 

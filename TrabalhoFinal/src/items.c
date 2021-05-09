@@ -11,12 +11,15 @@ pItem GetItem(int item_id){
 void ItemTouched(int item_id){
     pItem I = GetItem(item_id);
     switch(I->type){
-        case ITEM_KEY:
+        case ITEM_POWER:
         OnPlayerCollectPower();
         GetTurf(I->pos)->cur_item = NO_ID;//Sai do mapa
         break;
         case ITEM_WATER:
         OnPlayerKilled();
+        break;
+        case ITEM_KEY:
+        OnKeyCollected();
         break;
         case ITEM_EXIT:
         OnLevelEnd();

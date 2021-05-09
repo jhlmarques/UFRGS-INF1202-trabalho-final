@@ -7,6 +7,7 @@ TexturaTurfAberta;TexturaTurfFechada
 BlocosMoveis;TexturaBlocoMovel
 Aguas;TexturaAgua
 TexturaPoder
+TexturaChave
 TexturaSaída
 
 Mapa
@@ -28,7 +29,8 @@ Legenda:
 # = Territorio solido
 # = Territorio livre
 a,b,c = Criaturas
-B = Saida
+B = Chave
+D = Saida
 P = Jogador
 @ = Bloco movel
 = = Agua
