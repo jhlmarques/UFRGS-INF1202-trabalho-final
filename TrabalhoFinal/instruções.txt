@@ -1,0 +1,19 @@
+Trabalho da Dupla Matheus Almeida Silva e José Henrique Lima Marques
+
+O projeto foi compilado no codeblocks, porém o arquivo CBP pode não funcionar
+devido a configurações específicas do usuário
+Porém, desde que o codeblocks esteja configurado para utilizar a raylib,
+e o arquivo esteja no mesmo lugar que o original, deverá rodar sem erros
+
+Para a compilação, basta compilar todos arquivos da pasta 'src' juntamente da 
+biblioteca gráfica 'Raylib'.
+
+Para a execução correta, são necessários os arquivos de texto e png das pastas
+'maps' e 'textures' (com exceção dos arquivos de exemplos).
+
+É necessário também que haja um arquivo chamado 'saves.save', no diretório mais acima
+
+Devido às definições dos caminhos para os arquivos utilizados para o programa
+(encontrados em src/defines.h), o executável (ou arquivo .cbp) deve estar localizado
+no diretório mais acima
+

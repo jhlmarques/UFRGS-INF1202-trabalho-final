@@ -47,6 +47,7 @@
 #define MAX_MOVEMENT_COMMANDS 10
 #define POINT_REWARD_ENEMY_DEFEATED 1
 #define POINTS_EXTRA_LIFE 10
+#define PLAYER_ACTION_COOLDOWN 5
 
 //ITENS
 
@@ -59,11 +60,14 @@
 #define WINDOW_NAME "Trabalho Final - Jose Henrique Lima Marques e Matheus Almeida Silva"
 #define SCREENHEIGHT 450
 #define SCREENWIDTH 800
-#define TEXTURE_PLAYER 4
 #define TEXTURE_SIZE 32
 #define MAP_DRAW_Y_OFFSET 32
 #define INFO_X_DRAWPOS 0
 #define INFO_Y_DRAWPOS 16
+
+#define TEXTURE_PLAYER 3
+#define TEXTURE_MENU_BACKGROUND 11
+#define TEXTURE_GAME_TITLE 12
 
 //MISC
 #define MAX(a, b) ((a > b) ? a : b)
