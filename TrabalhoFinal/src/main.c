@@ -79,7 +79,6 @@ int main(void) {
         }
         else if(game_state == STATE_LOADING_MAP){//LÓGICA PRÉ-JOGO
             //Grava progresso
-            puts("CARREGANDO MAPA");
             if(!PopulateCurMapFromMapList(MAPLIST_NAME, cur_save->cur_level)){
                 cur_save->cur_level = 0;
                 game_state = STATE_STOPPED_PLAYING;
@@ -90,7 +89,6 @@ int main(void) {
                 cur_map->points = cur_save->points; //Carrega pontos da gravação para o mapa
                 game_state = STATE_PLAYING;
             }
-            puts("SALVANDO PROGRESSO...");
             WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
         }
         else if(game_state == STATE_STOPPED_PLAYING){//LÓGICA PÓS-JOGO - PRÉ-MENU
@@ -98,6 +96,8 @@ int main(void) {
             MapFreeElements(cur_map);
             //Grava progresso
             WriteSaveToFile(SAVEFILE_NAME, cur_save, cur_save->save_id);
+            //Se o jogo parou por falta de vidas
+            
             //Volta ao menu
             SetBasicMenu(&game_menu);
             game_state = STATE_MENU;

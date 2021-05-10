@@ -103,9 +103,11 @@ void MenuOnSelect(pMenu game_menu){
             }
             break;
         case MENU_DELETE_SAVE:
-            DeleteSaveFromFile(SAVEFILE_NAME, game_menu->selected);
-            saves_loaded--;
-            MenuStepBack(game_menu);
+            if(saves_loaded){
+                DeleteSaveFromFile(SAVEFILE_NAME, game_menu->selected);
+                saves_loaded--;
+                MenuStepBack(game_menu);
+            }
             break;
         case MENU_PAUSED:
             switch(game_menu->selected){
