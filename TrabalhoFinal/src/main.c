@@ -119,7 +119,7 @@ int main(void) {
 
         //FUNÇÕES GRÁFICAS
         BeginDrawing();
-            ClearBackground(WHITE);
+            ClearBackground(BLACK);
             switch(game_state){
                 case STATE_PLAYING:
                     #ifdef CMD_GRAPHICS

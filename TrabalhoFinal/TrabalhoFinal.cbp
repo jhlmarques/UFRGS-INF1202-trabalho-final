@@ -44,11 +44,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/game.h" />
-		<Unit filename="src/globals.h" />
-		<Unit filename="src/graphics_draw.c">
+		<Unit filename="src/game_draw.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/graphics_draw.h" />
+		<Unit filename="src/game_draw.h" />
+		<Unit filename="src/globals.h" />
 		<Unit filename="src/items.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -81,25 +81,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/turfs.h" />
-		<Unit filename="textures/ball.png" />
-		<Unit filename="textures/block.png" />
-		<Unit filename="textures/chest_closed.png" />
-		<Unit filename="textures/chest_opened.png" />
-		<Unit filename="textures/door_closed.png" />
-		<Unit filename="textures/door_open.png" />
-		<Unit filename="textures/enemy_1.png" />
-		<Unit filename="textures/enemy_2.png" />
-		<Unit filename="textures/floor_1.png" />
-		<Unit filename="textures/heart_1.png" />
-		<Unit filename="textures/life_1.png" />
-		<Unit filename="textures/menu_background.png" />
-		<Unit filename="textures/player_1.png" />
-		<Unit filename="textures/player_2.png" />
-		<Unit filename="textures/rock_1.png" />
-		<Unit filename="textures/scarfy.png" />
-		<Unit filename="textures/wall_bottom.png" />
-		<Unit filename="textures/wall_side.png" />
-		<Unit filename="textures/wall_up.png" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

@@ -130,8 +130,10 @@ void SetMenuMaxSelect(pMenu game_menu){
         game_menu->max_selection = 1;
         break;
         case MENU_LOADGAME:
-        case MENU_DELETE_SAVE:
         game_menu->max_selection = saves_loaded + 1;
+        break;
+        case MENU_DELETE_SAVE:
+        game_menu->max_selection = saves_loaded;
         break;
         case MENU_CREDITS:
         game_menu->max_selection = 0;

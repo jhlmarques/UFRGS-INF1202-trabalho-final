@@ -1,9 +1,12 @@
 textures/parede.png
 textures/chao.png
-textures/inimigo.png
-textures/player.png
-textures/ball.png
+textures/heroi.png
+textures/caixa.png
 textures/poder.png
+textures/goblin.png
+textures/caveira.png
 textures/agua.png
 textures/porta.png
 textures/chave.png
+textures/menu_background.png
+textures/titulo.png
